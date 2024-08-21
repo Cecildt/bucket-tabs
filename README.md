@@ -4,6 +4,8 @@
 
 A browser extension with Astro to manage tabs and safe of memory usage.  
 
+Currently still in development. The focus is to make it first feature complete for Chromium based browsers and then support other browsers.
+
 ## 🌟 Features
 
 - 🚀 Manage browser tabs into buckets.

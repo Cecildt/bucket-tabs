@@ -13,6 +13,7 @@
     "service_worker": "background.js"
   },
   "action": {
+    "default_title": "Bucket - Manage Tabs",
     "default_popup": "index.html"
   },
   "icons": {
@@ -20,5 +21,6 @@
     "32": "assets/images/icon32.png",
     "48": "assets/images/icon48.png",
     "128": "assets/images/icon128.png"
-  }
+  },
+  "permissions": ["tabs", "storage", "activeTab"]
 }

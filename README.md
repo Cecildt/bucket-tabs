@@ -1,4 +1,4 @@
-<img src="https://github.com/AminoffZ/catonaut/blob/main/public/assets/images/icon128.png?raw=true" align="right" width="128" height="128" title="catonaut">
+<img src="https://github.com/Cecildt/bucket-tabs/blob/main/public/assets/images/icon128.png?raw=true" align="right" width="128" height="128" title="bucket-tabs">
 
 # Bucket Tabs
 

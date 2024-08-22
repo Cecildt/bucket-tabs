@@ -122,6 +122,13 @@ npm run icons
 ```
 
 This will create the icons referenced by default in the manifest of sizes 16, 32, 48 and 128.
+Ensure you have the required imagemagick cli dependency installed on you machine. If not, run the following command for Ubuntu:
+
+```bash
+sudo apt install imagemagick
+```
+
+imagemagick website: [imagemagick](https://imagemagick.org/index.php)
 
 ### Testing the popup
 
@@ -197,4 +204,7 @@ To format with the provided configuration, run:
 
 ```bash
 npm run format
-```
+
+## Links
+
+ - [Icons from svgrepo](https://www.svgrepo.com/collection/twemoji-emojis/)

@@ -1,7 +1,7 @@
 import imagemagick from 'imagemagick';
 
-const root = `../public/assets/`;
-const filename = 'example.png';
+const root = `../public/assets/images/`;
+const filename = 'bucket.png';
 
 /**
  * Creates icons from an image for the manifest.
@@ -17,7 +17,10 @@ function createIcons() {
         height: size,
       },
       (err, _) => {
-        if (err) throw err;
+        if (err) {
+          console.error(err.message);
+          throw err;
+        }
       }
     );
     console.log(`resized ${filename} to ${size}x${size}`);

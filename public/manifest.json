@@ -16,9 +16,9 @@
     "default_popup": "index.html"
   },
   "icons": {
-    "16": "assets/images/bucket16.png",
-    "32": "assets/images/bucket32.png",
-    "48": "assets/images/bucket48.png",
-    "128": "assets/images/bucket120.png"
+    "16": "assets/images/icon16.png",
+    "32": "assets/images/icon32.png",
+    "48": "assets/images/icon48.png",
+    "128": "assets/images/icon128.png"
   }
 }

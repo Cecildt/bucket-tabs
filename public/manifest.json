@@ -22,5 +22,9 @@
     "48": "assets/images/icon48.png",
     "128": "assets/images/icon128.png"
   },
-  "permissions": ["tabs", "storage", "activeTab", "contextMenus"]
+  "permissions": ["tabs", "storage", "activeTab", "contextMenus"],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ]
 }

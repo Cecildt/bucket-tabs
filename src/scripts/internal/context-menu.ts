@@ -38,6 +38,8 @@ export function setupContextMenu(): void {
   });
 
   chrome.contextMenus.onClicked.addListener((info, tab) => {
+    console.log('Context menu item clicked: ', info.menuItemId);
+
     if (info.menuItemId === 'sleep-tab') {
       sleepTab(tab);
     } else if (info.menuItemId === 'suspend-tab') {
@@ -52,6 +54,7 @@ export function setupContextMenu(): void {
   });
 
   function sleepTab(tab?: chrome.tabs.Tab): void {
+    console.log('Sleeping tab');
     if (tab === undefined) {
       console.log('No tab to sleep');
       return;
@@ -77,8 +80,26 @@ export function setupContextMenu(): void {
   }
 
   function suspendTab(tab?: chrome.tabs.Tab): void {
+    console.log('Suspending tab');
     if (tab === undefined) {
       console.log('No tab to suspend');
+
+      getCurrentTab().then((currentTab) => {
+        if (currentTab === undefined) {
+          console.log('No current tab');
+          return;
+        }
+
+        let id = currentTab.id;
+
+        if (id === undefined) {
+          console.log('No tab ID');
+          return;
+        }
+
+        chrome.tabs.discard(id);
+      });
+
       return;
     }
 
@@ -89,7 +110,7 @@ export function setupContextMenu(): void {
       return;
     }
 
-    chrome.tabs.create({ url: 'buckets/index.html', pinned: true });
+    // chrome.tabs.create({ url: 'buckets/index.html', pinned: true });
     chrome.tabs.discard(id);
   }
 
@@ -97,5 +118,17 @@ export function setupContextMenu(): void {
     console.log('Displaying Buckets');
 
     chrome.tabs.create({ url: 'buckets/index.html', pinned: true });
+  }
+
+  async function getCurrentTab() {
+    let queryOptions = { active: true, lastFocusedWindow: true };
+    // `tab` will either be a `tabs.Tab` instance or `undefined`.
+    let [tab] = await chrome.tabs.query(queryOptions);
+
+    if (tab === undefined) {
+      console.log('No current tab found.');
+    }
+
+    return tab;
   }
 }

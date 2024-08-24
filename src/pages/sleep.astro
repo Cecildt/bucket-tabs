@@ -1,0 +1,69 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/icon128.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Bucket Sleeping Tab</title>
+    <style is:global>
+      body {
+        margin: 0;
+        font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+          sans-serif;
+        background-color: black;
+      }
+      h1 {
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+      }
+      h2 {
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+      }
+      .container {
+        background: linear-gradient(
+          180deg,
+          var(--gradient-start) 50%,
+          var(--gradient-end) 100%
+        );
+        padding: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Sleeping Tab</h1>
+    <h2 id="page-url"></h2>
+    <script>
+      const currentPageUrl = window.location.href;
+      console.log(currentPageUrl);
+      let pageUrl = document.getElementById('page-url');
+
+      if (pageUrl) pageUrl.textContent = currentPageUrl;
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const title = urlParams.get('title');
+      if (title) {
+        document.title = 'Sleeping - ' + title;
+      }
+
+      document.addEventListener('click', () => {
+        const urlParams = new URLSearchParams(queryString);
+        const url = urlParams.get('url');
+        if (url) {
+          window.location.href = url;
+        }
+      });
+    </script>
+  </body>
+</html>

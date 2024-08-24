@@ -21,7 +21,7 @@ export function setupContextMenu(): void {
   chrome.contextMenus.create({
     title: 'Display Buckets',
     parentId: parent,
-    id: 'diaplay-buckets',
+    id: 'display-buckets',
     contexts: contexts,
   });
   chrome.contextMenus.create({
@@ -34,7 +34,7 @@ export function setupContextMenu(): void {
   chrome.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === 'sleep-tab') {
       sleepTab(tab);
-    } else if (info.menuItemId === 'diaplay-buckets') {
+    } else if (info.menuItemId === 'display-buckets') {
       displayBuckets();
     } else if (info.menuItemId === 'send-to-bucket') {
       console.log('Sending to Bucket');
@@ -44,12 +44,33 @@ export function setupContextMenu(): void {
   });
 
   function sleepTab(tab?: chrome.tabs.Tab): void {
-    console.log('Sleeping tab: ', tab?.title);
+    if (tab === undefined) {
+      console.log('No tab to sleep');
+      return;
+    }
+
+    console.log('Sleeping tab: $1 - $2', tab.title, tab.url);
+    let sleepURL = 'sleep/index.html?title=' + tab.title + '&url=' + tab.url;
+    let id = tab.id;
+    let title = 'Sleeping - ' + tab.title;
+
+    if (id === undefined) {
+      console.log('No tab ID');
+      return;
+    }
+
+    if (title === undefined) {
+      console.log('No tab title');
+      title = 'Sleeping Tab';
+    }
+
+    chrome.tabs.update(id, { url: sleepURL });
+    
   }
 
   function displayBuckets(): void {
     console.log('Displaying Buckets');
 
-    // chrome.tabs.create({ url: info.linkUrl });
+    chrome.tabs.create({ url: "buckets/index.html", pinned: true });
   }
 }

@@ -29,6 +29,14 @@
         margin-top: 0;
         font-weight: 900;
         margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      p {
+        color: white;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
       }
       .container {
         background: linear-gradient(
@@ -42,7 +50,8 @@
   </head>
   <body>
     <h1>Sleeping Tab</h1>
-    <h2 id="page-url"></h2>
+    <h2>Click anywhere to reload the orginal web page.</h2>
+    <p id="page-url"></p>
     <script>
       const currentPageUrl = window.location.href;
       console.log(currentPageUrl);
@@ -52,17 +61,19 @@
 
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
-      const title = urlParams.get('title');
+      const title = urlParams.get('bt-title');
       if (title) {
         document.title = 'Sleeping - ' + title;
       }
 
       document.addEventListener('click', () => {
-        const urlParams = new URLSearchParams(queryString);
-        const url = urlParams.get('url');
-        if (url) {
+        const currentPageUrl = window.location.href;
+        let idx = currentPageUrl.indexOf('bt-url');
+        if (idx > -1) {
+          let url = currentPageUrl.substring(idx+7);
           window.location.href = url;
         }
+
       });
     </script>
   </body>

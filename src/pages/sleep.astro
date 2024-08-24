@@ -14,7 +14,7 @@
         margin: 0;
         font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
           sans-serif;
-        background-color: black;
+        background-color: #222222;
       }
       h1 {
         color: white;
@@ -50,30 +50,38 @@
   </head>
   <body>
     <h1>Sleeping Tab</h1>
-    <h2>Click anywhere to reload the orginal web page.</h2>
+    <h2 id="page-title"></h2>
+    <h2>Click anywhere on this page to reload the orginal web page.</h2>
     <p id="page-url"></p>
     <script>
       const currentPageUrl = window.location.href;
       console.log(currentPageUrl);
-      let pageUrl = document.getElementById('page-url');
+      let pageUrlEl = document.getElementById('page-url');
 
-      if (pageUrl) pageUrl.textContent = currentPageUrl;
+      if (pageUrlEl) {
+        let idx = currentPageUrl.indexOf('bt-url');
+        if (idx > -1) {
+          let url = currentPageUrl.substring(idx + 7);
+          pageUrlEl.textContent = url;
+        }
+      }
 
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const title = urlParams.get('bt-title');
       if (title) {
         document.title = 'Sleeping - ' + title;
+        let pageTitleEl = document.getElementById('page-title');
+        if (pageTitleEl) pageTitleEl.textContent = 'Tab Page Title: ' + title;
       }
 
       document.addEventListener('click', () => {
         const currentPageUrl = window.location.href;
         let idx = currentPageUrl.indexOf('bt-url');
         if (idx > -1) {
-          let url = currentPageUrl.substring(idx+7);
+          let url = currentPageUrl.substring(idx + 7);
           window.location.href = url;
         }
-
       });
     </script>
   </body>

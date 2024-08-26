@@ -38,7 +38,20 @@ export function setupContextMenu(): void {
     contexts: contexts,
   });
 
-  chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (chrome.contextMenus.onClicked === undefined) {
+    console.log('No context menu click handler');
+    return;
+  }
+
+  if (chrome.contextMenus.onClicked.hasListener(clickHandler)) {
+    console.log('Has menu click handler');
+    return
+  }
+
+  // chrome.contextMenus.onClicked.hasListener(clickHandler) && chrome.contextMenus.onClicked.removeListener(clickHandler);
+  chrome.contextMenus.onClicked.addListener(clickHandler);
+
+  function clickHandler(info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) {
     console.log('Context menu item clicked: ', info.menuItemId);
 
     if (info.menuItemId === 'sleep-tab') {
@@ -52,7 +65,7 @@ export function setupContextMenu(): void {
     } else {
       console.log('Unknown menu item clicked: ', info.menuItemId);
     }
-  });
+  }
 
   function sleepTab(tab?: chrome.tabs.Tab): void {
     console.log('Sleeping tab');
@@ -118,7 +131,24 @@ export function setupContextMenu(): void {
   function displayBuckets(): void {
     console.log('Displaying Buckets');
 
-    chrome.tabs.create({ url: 'buckets/index.html', pinned: true });
+    chrome.tabs.query({  title: 'Bucket Tabs' }, (tabs) => {
+      if (tabs.length === 0) {
+        console.log('No Buckets tab found.');
+        chrome.tabs.create({url: 'buckets/index.html', pinned: true });
+        return;
+      }
+
+      let tab = tabs[0];
+      let id = tab.id;
+
+      if (id === undefined) {
+        console.log('No tab ID');
+        return;
+      }
+
+      chrome.tabs.update(id, { active: true });
+
+    });
   }
 
   async function getCurrentTab() {

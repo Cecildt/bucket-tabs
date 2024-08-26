@@ -16,12 +16,12 @@ chrome.runtime.onStartup.addListener(function () {
 
 chrome.runtime.onSuspendCanceled.addListener(function () {
     console.log('Extension resumed');
-    setupContextMenu();
+    // setupContextMenu();
 });
 
 chrome.runtime.onUpdateAvailable.addListener(function () {
     console.log('Extension updated');
-    setupContextMenu();
+    // setupContextMenu();
 });
 
 chrome.runtime.onConnect.addListener(function (port) {
@@ -30,10 +30,13 @@ chrome.runtime.onConnect.addListener(function (port) {
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
     console.log('Tab activated: ', activeInfo);
-    setupContextMenu();
+    // setupContextMenu();
 });
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    console.log('Tab updated: ', tabId, changeInfo, tab);
-    setupContextMenu();
+    
+    if (changeInfo.status === 'complete') {
+        console.log('Tab updated: ', tabId, changeInfo, tab);
+        setupContextMenu();
+    }
 });

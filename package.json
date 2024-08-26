@@ -2,7 +2,7 @@
   "name": "bucket-tabs",
   "version": "0.0.1",
   "dependencies": {
-    "astro": "4.14.3"
+    "astro": "4.14.5"
   },
   "devDependencies": {
     "@types/chrome": "0.0.270",
@@ -11,7 +11,7 @@
     "prettier": "3.3.3",
     "tiny-glob": "0.2.9",
     "ts-loader": "9.5.1",
-    "webpack": "5.93.0",
+    "webpack": "5.94.0",
     "webpack-cli": "5.1.4"
   },
   "peerDependencies": {

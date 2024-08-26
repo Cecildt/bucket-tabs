@@ -6,7 +6,8 @@ export function setupContextMenu(): void {
     'browser_action',
   ];
 
-  // Create a parent item and two children.
+  chrome.contextMenus.removeAll();
+
   let parent = chrome.contextMenus.create({
     title: 'Bucket - Manage Tabs',
     id: 'parent',

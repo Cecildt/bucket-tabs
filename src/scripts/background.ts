@@ -12,7 +12,6 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.runtime.onStartup.addListener(function () {
     console.log('Extension started');
-    setupContextMenu();
 });
 
 chrome.runtime.onSuspendCanceled.addListener(function () {
@@ -28,11 +27,6 @@ chrome.runtime.onUpdateAvailable.addListener(function () {
 chrome.runtime.onConnect.addListener(function (port) {
     console.log('Connected to port: ', port);
 });
-
-chrome.runtime.onRestartRequired.addListener(function (reason) {
-    console.log('Restart required: ', reason);
-});
-
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
     console.log('Tab activated: ', activeInfo);

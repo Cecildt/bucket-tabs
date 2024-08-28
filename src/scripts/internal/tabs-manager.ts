@@ -59,6 +59,23 @@ export function suspendTab(tab?: chrome.tabs.Tab): void {
   chrome.tabs.discard(id);
 }
 
+export function suspendAllTabs(): void {
+  console.log('Suspending all tabs');
+
+  chrome.tabs.query({ currentWindow: true}, (tabs) => {
+    for (let tab of tabs) {
+      let id = tab.id;
+
+      if (id === undefined) {
+        console.log('No tab ID');
+        return;
+      }
+
+      chrome.tabs.discard(id);
+    }
+  });
+}
+
 export function displayBuckets(): void {
     console.log('Displaying Buckets');
 

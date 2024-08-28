@@ -27,6 +27,7 @@ const config = {
   entry: {
     content: '../src/scripts/content.ts',
     background: '../src/scripts/background.ts',
+    popup: '../src/scripts/popup.ts',
   },
   optimization: {
     minimize: false,

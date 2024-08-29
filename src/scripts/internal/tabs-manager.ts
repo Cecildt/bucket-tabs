@@ -79,7 +79,7 @@ export function suspendAllTabs(): void {
 export function displayBuckets(): void {
     console.log('Displaying Buckets');
 
-    chrome.tabs.query({  title: 'Bucket Tabs' }, (tabs) => {
+    chrome.tabs.query({  title: 'Bucket Tabs Management' }, (tabs) => {
       if (tabs.length === 0) {
         console.log('No Buckets tab found.');
         chrome.tabs.create({url: 'buckets/index.html', pinned: true });

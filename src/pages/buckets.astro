@@ -1,5 +1,7 @@
 ---
-import Placeholder from '../components/Placeholder.astro';
+import Navbar from '../components/Navbar.astro';
+import BucketsList from '../components/BucketsList.astro';
+
 ---
 
 <html lang="en">
@@ -11,17 +13,19 @@ import Placeholder from '../components/Placeholder.astro';
     <title>Bucket Tabs Management</title>
   </head>
   <body>
-    <h1>Manage Buckets</h1>
+    <Navbar />
     <!-- Render the Navbar component -->
-    <div class="flex bg-gray-50">
-      <div class="flex-2">
-        <!-- Render the Side bar component -->
-        <button class="btn">Sidebar daisyUI</button> 
-      </div>
-      <div class="flex-auto bg-slate-500">
+    <div class="flex">
+      <div class="flex-auto w-64">
         <!-- Render the Main Content component -->
-        <button class="btn">Hello daisyUI</button> 
+         <BucketsList />
       </div>
     </div>
   </body>
 </html>
+
+<style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+</style>

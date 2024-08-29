@@ -2,7 +2,7 @@
 import Placeholder from '../components/Placeholder.astro';
 ---
 
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/images/icon128.png" />
@@ -10,30 +10,38 @@ import Placeholder from '../components/Placeholder.astro';
     <meta name="generator" content={Astro.generator} />
     <title>Bucket Tabs</title>
   </head>
-  <body>
+  <body class="bg-white dark:bg-black">
     <div class="container w-60">
-      <h1>Bucket Tabs</h1>
+      <div class="flex items-center justify-center">
+        <img
+        title="bucket"
+        width="16"
+        height="16"
+        src="/assets/images/icon16.png"
+        alt="bucket"/>
+      <h1 class="text-slate-50">Bucket Tabs</h1>
+      </div>
       <button
         id="bt-btn-sleep-tab"
-        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
       >
-        Sleeping Tab
+        Sleep Tab
       </button>
       <button
         id="bt-btn-suspend-current-tab"
-        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
       >
         Suspend current tab
       </button>
       <button
         id="bt-btn-suspend-all-tab"
-        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
       >
         Suspend all tabs
       </button>
       <button
         id="bt-btn-display-buckets"
-        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        class="w-4/5 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
       >
         Display Buckets
       </button>
@@ -42,14 +50,14 @@ import Placeholder from '../components/Placeholder.astro';
   </body>
 </html>
 
-
 <style is:global>
+  @tailwind base;
 
-h1 {
-    /* color: white; */
+  /* h1 {
+    color: white;
     text-align: center;
     margin-top: 0;
     font-weight: 900;
     margin-bottom: 1.5rem;
-  }
+  } */
 </style>

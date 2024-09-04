@@ -1,7 +1,6 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import BucketsList from '../components/BucketsList.astro';
-
 ---
 
 <html lang="en">
@@ -18,7 +17,7 @@ import BucketsList from '../components/BucketsList.astro';
     <div class="flex">
       <div class="flex-auto w-64">
         <!-- Render the Main Content component -->
-         <BucketsList />
+        <BucketsList />
       </div>
     </div>
   </body>
@@ -29,3 +28,75 @@ import BucketsList from '../components/BucketsList.astro';
   @tailwind components;
   @tailwind utilities;
 </style>
+
+<script>
+  import { initStorage } from '../scripts/internal/storage';
+
+  console.log('Buckets inline script loaded');
+  // initStorage();
+
+  const opt_expand_all = document.getElementById('opt-expand-all');
+  if (opt_expand_all) {
+    opt_expand_all.addEventListener('click', async () => {
+      console.log('Option Expand All clicked');
+
+      const buckets = document.getElementById('buckets-list')?.getElementsByClassName('bt-bucket-group');
+
+      if(!buckets)
+        return;
+
+      console.log("Buckets: ", buckets.length);
+      for (let bucket = 0; bucket < buckets.length; bucket++) {
+        const element = buckets[bucket];
+        element.getElementsByTagName('input')[0].checked = true;
+      }
+    });
+  }
+
+  const opt_collapse_all = document.getElementById('opt-collapse-all');
+  if (opt_collapse_all) {
+    opt_collapse_all.addEventListener('click', async () => {
+      console.log('Option Collapse All clicked');
+      const buckets = document.getElementById('buckets-list')?.getElementsByClassName('bt-bucket-group');
+
+      if(!buckets)
+        return;
+
+      console.log("Buckets: ", buckets.length);
+      for (let bucket = 0; bucket < buckets.length; bucket++) {
+        const element = buckets[bucket];
+        element.getElementsByTagName('input')[0].checked = false;
+      }
+    });
+  }
+
+  const opt_export_buckets = document.getElementById('opt-export-buckets');
+  if (opt_export_buckets) {
+    opt_export_buckets.addEventListener('click', async () => {
+      console.log('Option Export Buckets clicked');
+    });
+  }
+
+  const opt_delete_buckets = document.getElementById('opt-delete-buckets');
+  if (opt_delete_buckets) {
+    opt_delete_buckets.addEventListener('click', async () => {
+      console.log('Option Delete Buckets clicked');
+      const bucketList = document.getElementById('buckets-list');
+      
+      if(!bucketList)
+        return;
+
+      const buckets = bucketList.querySelectorAll('li');
+
+      if(!buckets)
+        return;
+
+      console.log("Buckets: ", buckets.length);
+
+      Array.prototype.forEach.call(buckets, (li) => {
+        bucketList.removeChild(li);
+      });
+    });
+  }
+
+</script>

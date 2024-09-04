@@ -1,3 +1,5 @@
+// Description: This script is responsible for handling the popup window of the extension.
+
 import { sleepTab, suspendTab, displayBuckets, getCurrentTab, suspendAllTabs } from './internal/tabs-manager';
 
 console.log('Popup script loaded');

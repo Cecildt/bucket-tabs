@@ -99,4 +99,11 @@ import BucketsList from '../components/BucketsList.astro';
     });
   }
 
+  const opt_add_bucket = document.getElementById('opt-add-bucket');
+  if (opt_add_bucket) {
+    opt_add_bucket.addEventListener('click', async () => {
+      console.log('Option Add Bucket clicked');
+    });
+  }
+
 </script>

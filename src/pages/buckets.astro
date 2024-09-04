@@ -1,6 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import BucketsList from '../components/BucketsList.astro';
+import BucketGroup from '../components/BucketGroup.astro';
 ---
 
 <html lang="en">
@@ -20,6 +21,8 @@ import BucketsList from '../components/BucketsList.astro';
         <BucketsList />
       </div>
     </div>
+    <div id="html-templates" hidden="true">
+      <BucketGroup id="template-bucket" name="New Bucket" />
   </body>
 </html>
 
@@ -103,6 +106,37 @@ import BucketsList from '../components/BucketsList.astro';
   if (opt_add_bucket) {
     opt_add_bucket.addEventListener('click', async () => {
       console.log('Option Add Bucket clicked');
+      const bucket_template = document.getElementById('template-bucket');
+
+      if(!bucket_template)
+        return;
+
+      const bucketList = document.getElementById('buckets-list');
+
+      if(!bucketList)
+        return;
+
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.createElement('li'));
+      let newBucket = bucket_template.cloneNode(true);
+
+      if (newBucket) {
+        console.log("Setup Bucket");
+        if (fragment.firstChild) {
+          const totalBuckets = bucketList.childElementCount + 1;
+          fragment.firstChild.appendChild(newBucket);
+          let bucket = fragment.firstChild.firstChild;
+          (bucket as HTMLElement).removeAttribute('id');
+          (bucket as HTMLElement).setAttribute('id', 'bucket-' + totalBuckets);
+
+          const collapseTitle = (bucket as HTMLElement).querySelector('.collapse-title');
+          if (collapseTitle) {
+            collapseTitle.textContent = 'New Bucket ' + totalBuckets;
+          }
+        }
+
+        bucketList?.appendChild(fragment);
+      }
     });
   }
 

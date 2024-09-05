@@ -1,0 +1,55 @@
+---
+
+---
+
+<div class="navbar bg-base-100">
+  <div class="navbar-start">
+    <ul class="menu menu-horizontal px-1 mr-14">
+      <li>
+        <details>
+          <summary>Tabs Actions</summary>
+          <ul class="bt-tabs-actions-menu p-2 w-44 z-50">
+            <li><a>Restore all tabs</a></li>
+            <li><a>Delete all tabs</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>Bucket Actions</summary>
+          <ul class="bt-bucket-actions-menu p-2 w-44">
+            <li><a>Lock bucket</a></li>
+            <li><a>Star bucket</a></li>
+            <li><a>Rename bucket</a></li>
+            <li><a>Archive bucket</a></li>
+            <li><a>Delete bucket</a></li>
+          </ul>
+        </details>
+      </li>
+    </ul>
+  </div>
+  <div class="navbar-center hidden lg:flex"></div>
+  <div class="navbar-end">    
+  </div>
+</div>
+
+<script>
+  console.log('Navbar inline script loaded');
+
+  const opt_menu_items = document.querySelector('.bt-opt-menu-items');
+  if (opt_menu_items) {
+    opt_menu_items.addEventListener('click', async (event) => {
+      const targetElement = event.target as HTMLElement;
+      targetElement.parentElement?.parentElement?.parentElement?.removeAttribute('open');
+    });
+  }
+
+  const help_menu_items = document.querySelector('.bt-help-menu-items');
+  if (help_menu_items) {
+    help_menu_items.addEventListener('click', async (event) => {
+      const targetElement = event.target as HTMLElement;
+      targetElement.parentElement?.parentElement?.parentElement?.removeAttribute('open');
+    });
+  }
+
+</script>

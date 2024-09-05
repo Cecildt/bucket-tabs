@@ -1,4 +1,5 @@
 ---
+import BucketActionsMenu from "./BucketActionsMenu.astro";
 const { name, id } = Astro.props;
 ---
 
@@ -10,13 +11,9 @@ const { name, id } = Astro.props;
     {name} - <span class="badge badge-primary">0</span>    
   </div>
   <div class="collapse-content">
-    <div>
-      <button class="btn btn-sm">Restore all tabs</button>
-      <button class="btn btn-sm">Delete all tabs</button>
-      <button class="btn btn-sm">Lock bucket</button>
-      <button class="btn btn-sm">Archive bucket</button>
-      <button class="btn btn-sm">Delete bucket</button>
+    <BucketActionsMenu />
+    <div class="h-52">
+      <p>No tabs added.</p>
     </div>
-    <p>No tabs added.</p>
   </div>
 </div>

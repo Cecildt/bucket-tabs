@@ -1,6 +1,9 @@
 ---
 import BucketActionsMenu from "./BucketActionsMenu.astro";
-const { name, id } = Astro.props;
+import StarIcon from "../icons/StarIcon.astro";
+import LockIcon from "../icons/LockIcon.astro"
+
+const { name, id, star, locked } = Astro.props;
 ---
 
 <div id={id}
@@ -8,6 +11,12 @@ const { name, id } = Astro.props;
 >
   <input type="checkbox" />
   <div class="collapse-title text-xl font-medium">
+    <button class="btn btn-circle btn-xs" style={star ? "" : "display:none"}>
+      <StarIcon />
+    </button>
+    <button class="btn btn-circle btn-xs" style={locked ? "" : "display:none"}>
+      <LockIcon />
+    </button>
     {name} - <span class="badge badge-primary">0</span>    
   </div>
   <div class="collapse-content">
@@ -17,3 +26,9 @@ const { name, id } = Astro.props;
     </div>
   </div>
 </div>
+
+<style>
+  .hide {
+    display: none;
+  }
+</style>

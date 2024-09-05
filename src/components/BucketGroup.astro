@@ -6,8 +6,17 @@ const { name, id } = Astro.props;
   class="collapse collapse-arrow bg-base-200 mt-2 bt-bucket-group"
 >
   <input type="checkbox" />
-  <div class="collapse-title text-xl font-medium">{name}</div>
+  <div class="collapse-title text-xl font-medium">
+    {name} - <span class="badge badge-primary">0</span>    
+  </div>
   <div class="collapse-content">
+    <div>
+      <button class="btn btn-sm">Restore all tabs</button>
+      <button class="btn btn-sm">Delete all tabs</button>
+      <button class="btn btn-sm">Lock bucket</button>
+      <button class="btn btn-sm">Archive bucket</button>
+      <button class="btn btn-sm">Delete bucket</button>
+    </div>
     <p>No tabs added.</p>
   </div>
 </div>

@@ -14,7 +14,7 @@
       <li>
         <details>
           <summary>Options</summary>
-          <ul class="p-2 w-44 z-50">
+          <ul class="bt-opt-menu-items p-2 w-44 z-50">
             <li><a id="opt-expand-all">Expand All Buckets</a></li>
             <li><a id="opt-collapse-all">Collapse All Buckets</a></li>
             <li><a id="opt-export-buckets">Export Buckets</a></li>
@@ -25,12 +25,33 @@
       <li>
         <details>
           <summary>Help</summary>
-          <ul class="p-2 w-32 z-50">
-            <li><a>Guidance</a></li>
-            <li><a>Terms and Conditions</a></li>
+          <ul class="bt-help-menu-items p-2 w-32 z-50">
+            <li><a href="https://github.com/Cecildt/bucket-tabs" target="_blank">Guidance</a></li>
+            <li><a href="https://github.com/Cecildt/bucket-tabs" target="_blank">Terms and Conditions</a></li>
           </ul>
         </details>
       </li>
     </ul>
   </div>
 </div>
+
+<script>
+  console.log('Navbar inline script loaded');
+
+  const opt_menu_items = document.querySelector('.bt-opt-menu-items');
+  if (opt_menu_items) {
+    opt_menu_items.addEventListener('click', async (event) => {
+      const targetElement = event.target as HTMLElement;
+      targetElement.parentElement?.parentElement?.parentElement?.removeAttribute('open');
+    });
+  }
+
+  const help_menu_items = document.querySelector('.bt-help-menu-items');
+  if (help_menu_items) {
+    help_menu_items.addEventListener('click', async (event) => {
+      const targetElement = event.target as HTMLElement;
+      targetElement.parentElement?.parentElement?.parentElement?.removeAttribute('open');
+    });
+  }
+
+</script>

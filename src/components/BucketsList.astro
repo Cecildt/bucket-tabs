@@ -1,25 +1,41 @@
 ---
-import BucketGroup from "./BucketGroup.astro"
+import BucketGroup from './BucketGroup.astro';
 ---
+
 <ul id="buckets-list" class="z-0">
-    <li>
-        <BucketGroup id="bucket-1" name="Bucket 1" />
-    </li>
-    <li>
-        <BucketGroup id="bucket-2" name="Bucket 2" star="true" />
-    </li>
-    <li>
-        <BucketGroup id="bucket-3" name="Bucket 3" />
-    </li>
-    <li>
-        <BucketGroup id="bucket-4" name="Bucket 4" locked="true" />
-    </li>
-    <li>
-        <BucketGroup id="bucket-5" name="Bucket 5" star="true" locked="true" />
-    </li>
+  <li>
+    <BucketGroup id="bucket-1" name="Bucket 1" />
+  </li>
+  <li>
+    <BucketGroup id="bucket-2" name="Bucket 2" star="true" />
+  </li>
+  <li>
+    <BucketGroup id="bucket-3" name="Bucket 3" />
+  </li>
+  <li>
+    <BucketGroup id="bucket-4" name="Bucket 4" locked="true" />
+  </li>
+  <li>
+    <BucketGroup id="bucket-5" name="Bucket 5" star="true" locked="true" />
+  </li>
 </ul>
 <ul id="buckets-list-archive" class="z-0">
-    <li>
-        <BucketGroup id="bucket-archive" name="Archive Bucket" />
-    </li>
+  <li>
+    <BucketGroup id="bucket-archive" name="Archive Bucket" />
+  </li>
 </ul>
+
+<script>
+  const bucket_list = document.getElementById('buckets-list');
+  if (bucket_list) {
+    bucket_list.addEventListener('click', async (event) => {
+      const targetElement = event.target as HTMLElement;
+
+      if (targetElement.classList.contains('bt-action-menu-item')) {
+        targetElement.parentElement?.parentElement?.parentElement?.removeAttribute(
+          'open'
+        );
+      }
+    });
+  }
+</script>

@@ -1,5 +1,5 @@
 ---
-
+import GlobalSearchBox from "./GlobalSearchBox.astro"
 ---
 
 <div class="navbar bg-base-100">
@@ -7,7 +7,9 @@
     <img src="/assets/images/icon128.png" alt="logo" class="w-10 h-10" />
     <h1 class="text-xl ml-4">Bucket Tabs Management</h1>
   </div>
-  <div class="navbar-center hidden lg:flex"></div>
+  <div class="navbar-center hidden lg:flex">
+    <GlobalSearchBox />
+  </div>
   <div class="navbar-end">
     <ul class="menu menu-horizontal px-1 mr-14">
       <li><a id="opt-add-bucket">+ Add Bucket</a></li>

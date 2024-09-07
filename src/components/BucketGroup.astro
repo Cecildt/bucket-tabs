@@ -2,6 +2,7 @@
 import BucketActionsMenu from "./BucketActionsMenu.astro";
 import StarIcon from "../icons/StarIcon.astro";
 import LockIcon from "../icons/LockIcon.astro"
+import TabsList from "./TabsList.astro";
 
 const { name, id, star, locked } = Astro.props;
 ---
@@ -22,7 +23,7 @@ const { name, id, star, locked } = Astro.props;
   <div class="collapse-content">
     <BucketActionsMenu />
     <div class="h-52">
-      <p>No tabs added.</p>
+      <TabsList />
     </div>
   </div>
 </div>

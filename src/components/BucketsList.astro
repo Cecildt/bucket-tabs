@@ -1,5 +1,6 @@
 ---
 import BucketGroup from './BucketGroup.astro';
+import RenameBucketDialog from './RenameBucketDialog.astro';
 ---
 
 <ul id="buckets-list" class="z-0">
@@ -25,7 +26,13 @@ import BucketGroup from './BucketGroup.astro';
   </li>
 </ul>
 
+<RenameBucketDialog />
+
 <script>
+import { GlobalBucketTabsObject } from "../scripts/internal/global-object";
+
+  window.globalBucketTabsObject = new GlobalBucketTabsObject();
+
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
     bucket_list.addEventListener('click', async (event) => {
@@ -36,6 +43,37 @@ import BucketGroup from './BucketGroup.astro';
           'open'
         );
       }
+
+      // bt-action-rename-bucket
+      if (targetElement.classList.contains('bt-action-rename-bucket')) {
+        console.log('Rename bucket');
+
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketName = '';
+        
+        if(bucketGroup){
+          const bucketId = bucketGroup?.id;
+          window.globalBucketTabsObject.setCurrentBucketID(bucketId);
+          const bucketNameElement = bucketGroup.querySelector('.bt-bucket-name');
+          if(bucketNameElement) {
+            bucketName = bucketNameElement.textContent ?? '';
+          }
+        }
+        
+        if (bucketName === undefined) {
+          bucketName = 'Bucket';
+          
+        }
+
+        const renameBucketDialog = document.getElementById('bt-rename-bucket');
+        const renameInput = renameBucketDialog?.querySelector("input");
+        if(renameInput){
+          renameInput.value = bucketName;
+          window.globalBucketTabsObject.setCurrentBucketName(bucketName);
+          renameBucketDialog?.showModal(); // DaisyUI modal method
+        }
+      }
+
     });
   }
 </script>

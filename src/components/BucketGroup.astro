@@ -18,7 +18,7 @@ const { name, id, star, locked } = Astro.props;
     <button class="btn btn-circle btn-xs" style={locked ? "" : "display:none"}>
       <LockIcon />
     </button>
-    {name} - <span class="badge badge-primary">0</span>    
+    <span class="bt-bucket-name">{name}</span> - <span class="badge badge-primary">0</span>    
   </div>
   <div class="collapse-content">
     <BucketActionsMenu />
@@ -27,9 +27,3 @@ const { name, id, star, locked } = Astro.props;
     </div>
   </div>
 </div>
-
-<style>
-  .hide {
-    display: none;
-  }
-</style>

@@ -1,6 +1,9 @@
+import { BucketListDataModel } from './bucket-data-model';
+
 export class GlobalBucketTabsObject {
     private CurrentBucketID: String = '';
     private CurrentBucketName: String = '';
+    public BucketListDataModel: BucketListDataModel = new BucketListDataModel();
     
     constructor() {
     }

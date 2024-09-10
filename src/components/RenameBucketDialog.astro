@@ -26,6 +26,24 @@
   if (renameBucketBtn) {
     renameBucketBtn.addEventListener('click', ()=>{
       console.log('Rename bucket button');
+
+      const renameBucketDialog = document.getElementById('bt-rename-bucket');
+        const renameInput = renameBucketDialog?.querySelector("input");
+        if(renameInput){
+          const bucketName = renameInput.value;
+          console.log('Bucket name:', bucketName);
+
+          const bucketID = window.globalBucketTabsObject.getCurrentBucketID();
+
+          const bucketEl = document.getElementById(bucketID.toString());
+          if (bucketEl) {
+            const bucketNameElement = bucketEl.querySelector('.bt-bucket-name');
+            if(bucketNameElement) {
+              bucketNameElement.textContent = bucketName;
+            }
+          }          
+        }
+
     });
   }
 </script>

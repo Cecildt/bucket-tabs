@@ -4,21 +4,9 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 ---
 
 <ul id="buckets-list" class="z-0">
-  <li>
-    <BucketGroup id="bucket-1" name="Bucket 1" />
-  </li>
-  <li>
-    <BucketGroup id="bucket-2" name="Bucket 2" star="true" />
-  </li>
-  <li>
-    <BucketGroup id="bucket-3" name="Bucket 3" />
-  </li>
-  <li>
-    <BucketGroup id="bucket-4" name="Bucket 4" locked="true" />
-  </li>
-  <li>
+  <!-- <li>
     <BucketGroup id="bucket-5" name="Bucket 5" star="true" locked="true" />
-  </li>
+  </li> -->
 </ul>
 <ul id="buckets-list-archive" class="z-0">
   <li>
@@ -29,12 +17,49 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 <RenameBucketDialog />
 
 <script>
-import { GlobalBucketTabsObject } from "../scripts/internal/global-object";
+  import { GlobalBucketTabsState } from '../scripts/internal/global-object';
 
-  window.globalBucketTabsObject = new GlobalBucketTabsObject();
+  window.globalBucketTabsState = new GlobalBucketTabsState();
 
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
+    setupEventListeners(bucket_list);
+    loadBuckets(bucket_list);
+  }
+
+  function loadBuckets(bucket_list: HTMLElement): void {
+    window.globalBucketTabsState.BucketListDataModel.getBuckets().forEach(
+      (bucket) => {
+        const bucket_template = document.getElementById('template-bucket');
+
+        if (!bucket_template) return;
+
+        const fragment = document.createDocumentFragment();
+        fragment.appendChild(document.createElement('li'));
+        let newBucket = bucket_template.cloneNode(true);
+
+        if (newBucket) {
+          console.log('Setup Bucket');
+          if (fragment.firstChild) {
+            const totalBuckets = bucket_list.childElementCount + 1;
+            fragment.firstChild.appendChild(newBucket);
+            let bucketEL = fragment.firstChild.firstChild as HTMLElement;
+            bucketEL.removeAttribute('id');
+            bucketEL.setAttribute('id', bucket.getBucketID().toString());
+
+            const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
+            if (collapseTitle) {
+              collapseTitle.textContent = bucket.getBucketName().toString();
+            }
+          }
+
+          bucket_list.appendChild(fragment);
+        }
+      }
+    );
+  }
+
+  function setupEventListeners(bucket_list: HTMLElement): void {
     bucket_list.addEventListener('click', async (event) => {
       const targetElement = event.target as HTMLElement;
 
@@ -50,30 +75,29 @@ import { GlobalBucketTabsObject } from "../scripts/internal/global-object";
 
         const bucketGroup = targetElement.closest('.bt-bucket-group');
         let bucketName = '';
-        
-        if(bucketGroup){
+
+        if (bucketGroup) {
           const bucketId = bucketGroup?.id;
-          window.globalBucketTabsObject.setCurrentBucketID(bucketId);
-          const bucketNameElement = bucketGroup.querySelector('.bt-bucket-name');
-          if(bucketNameElement) {
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          const bucketNameElement =
+            bucketGroup.querySelector('.bt-bucket-name');
+          if (bucketNameElement) {
             bucketName = bucketNameElement.textContent ?? '';
           }
         }
-        
+
         if (bucketName === undefined) {
           bucketName = 'Bucket';
-          
         }
 
         const renameBucketDialog = document.getElementById('bt-rename-bucket');
-        const renameInput = renameBucketDialog?.querySelector("input");
-        if(renameInput){
+        const renameInput = renameBucketDialog?.querySelector('input');
+        if (renameInput) {
           renameInput.value = bucketName;
-          window.globalBucketTabsObject.setCurrentBucketName(bucketName);
+          window.globalBucketTabsState.setCurrentBucketName(bucketName);
           renameBucketDialog?.showModal(); // DaisyUI modal method
         }
       }
-
     });
   }
 </script>

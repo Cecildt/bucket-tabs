@@ -33,7 +33,7 @@
           const bucketName = renameInput.value;
           console.log('Bucket name:', bucketName);
 
-          const bucketID = window.globalBucketTabsObject.getCurrentBucketID();
+          const bucketID = window.globalBucketTabsState.getCurrentBucketID();
 
           const bucketEl = document.getElementById(bucketID.toString());
           if (bucketEl) {

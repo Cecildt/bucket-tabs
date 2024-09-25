@@ -1,10 +1,12 @@
+import { ulid } from 'ulid'
 
 export class BucketListDataModel {
     private Buckets: Array<BucketDataModel> = [];
+    private Archived: Array<BucketDataModel> = [];
 
     constructor() {
-        this.Buckets.push(new BucketDataModel(1, 'Default Bucket', 1));
-        this.Buckets.push(new BucketDataModel(2, 'Archive Bucket', 99));
+        this.Buckets.push(new BucketDataModel('Default Bucket', 1));
+        this.Archived.push(new BucketDataModel('Archived Bucket', 1));
     }
 
     addBucket(bucket: BucketDataModel): void {
@@ -26,23 +28,23 @@ export class BucketListDataModel {
 
 
 export class BucketDataModel {
-    private BucketID: Number = -1;
+    private BucketID: String = ulid();
     private BucketName: String = '';
     private Order: Number = -1;
     private BucketTabs: Array<TabDataModel> = [];    
     
-    constructor(id: Number, name: String, order: Number) {
-        this.BucketID = id;
+    constructor(name: String, order: Number) {
         this.BucketName = name;        
         this.Order = order;
+        console.log(this.BucketID);
     }
 
-    addTab(tab: TabDataModel): void {
+    public addTab(tab: TabDataModel): void {
         tab.setOrder(this.BucketTabs.length + 1);
         this.BucketTabs.push(tab);
     }
 
-    removeTab(tab: TabDataModel): void {
+    public removeTab(tab: TabDataModel): void {
         let index = this.BucketTabs.indexOf(tab);
         if (index > -1) {
             this.BucketTabs.splice(index, 1);
@@ -55,6 +57,14 @@ export class BucketDataModel {
 
     setOrder(order: Number): void {
         this.Order = order;
+    }
+
+    getBucketID(): String {
+        return this.BucketID;
+    }
+
+    getBucketName(): String {
+        return this.BucketName
     }
 }
 

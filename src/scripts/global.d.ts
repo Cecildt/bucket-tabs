@@ -1,4 +1,4 @@
-import { GlobalBucketTabsState } from "./internal/global-object";
+import { GlobalBucketTabsState } from "./internal/global-state";
 
 declare global {
     interface Window {

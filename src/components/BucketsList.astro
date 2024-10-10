@@ -17,9 +17,12 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 <RenameBucketDialog />
 
 <script>
-  import { GlobalBucketTabsState } from '../scripts/internal/global-object';
+  import type { BucketDataModel } from '../scripts/internal/bucket-data-model';
+  import { GlobalBucketTabsState } from '../scripts/internal/global-state';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
+  window.globalBucketTabsState.setBrowserStorage(true);
+  await window.globalBucketTabsState.initDataSet();
 
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
@@ -29,7 +32,7 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 
   function loadBuckets(bucket_list: HTMLElement): void {
     window.globalBucketTabsState.BucketListDataModel.getBuckets().forEach(
-      (bucket) => {
+      (bucket: BucketDataModel) => {
         const bucket_template = document.getElementById('template-bucket');
 
         if (!bucket_template) return;

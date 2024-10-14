@@ -69,12 +69,12 @@ export class BucketDataModel {
         console.log(this.BucketID);
     }
 
-    public addTab(tab: TabDataModel): void {
+    addTab(tab: TabDataModel): void {
         tab.setOrder(this.BucketTabs.length + 1);
         this.BucketTabs.push(tab);
     }
 
-    public removeTab(tab: TabDataModel): void {
+    removeTab(tab: TabDataModel): void {
         let index = this.BucketTabs.indexOf(tab);
         if (index > -1) {
             this.BucketTabs.splice(index, 1);

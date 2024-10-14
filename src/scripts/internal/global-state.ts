@@ -10,8 +10,8 @@ export class GlobalBucketTabsState {
     constructor() {
     }
 
-    initDataSet(): void {
-        this.BucketListDataModel.initDataSet();
+    async initDataSet(): Promise<void> {
+        await this.BucketListDataModel.initDataSet();
     }
 
     setCurrentBucketName(name: String): void{

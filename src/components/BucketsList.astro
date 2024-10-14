@@ -24,6 +24,12 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
   window.globalBucketTabsState.setBrowserStorage(true);
   await window.globalBucketTabsState.initDataSet();
 
+  if (
+    window.globalBucketTabsState.BucketListDataModel.getBuckets().length === 0
+  ) {
+    console.log('No buckets found!');
+  }
+
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
     setupEventListeners(bucket_list);
@@ -31,35 +37,35 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
   }
 
   function loadBuckets(bucket_list: HTMLElement): void {
-    window.globalBucketTabsState.BucketListDataModel.getBuckets().forEach(
-      (bucket: BucketDataModel) => {
-        const bucket_template = document.getElementById('template-bucket');
+    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    buckets.forEach((bucket: BucketDataModel) => {
+      const bucket_template = document.getElementById('template-bucket');
 
-        if (!bucket_template) return;
+      if (!bucket_template) return;
 
-        const fragment = document.createDocumentFragment();
-        fragment.appendChild(document.createElement('li'));
-        let newBucket = bucket_template.cloneNode(true);
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.createElement('li'));
+      let newBucket = bucket_template.cloneNode(true);
 
-        if (newBucket) {
-          console.log('Setup Bucket');
-          if (fragment.firstChild) {
-            const totalBuckets = bucket_list.childElementCount + 1;
-            fragment.firstChild.appendChild(newBucket);
-            let bucketEL = fragment.firstChild.firstChild as HTMLElement;
-            bucketEL.removeAttribute('id');
-            bucketEL.setAttribute('id', bucket.getBucketID().toString());
+      if (newBucket) {
+        console.log('Setup Bucket');
+        if (fragment.firstChild) {
+          const totalBuckets = bucket_list.childElementCount + 1;
+          fragment.firstChild.appendChild(newBucket);
+          let bucketEL = fragment.firstChild.firstChild as HTMLElement;
+          let bucketID = bucket.getBucketID().toString();
+          bucketEL.removeAttribute('id');
+          bucketEL.setAttribute('id', bucketID);
 
-            const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
-            if (collapseTitle) {
-              collapseTitle.textContent = bucket.getBucketName().toString();
-            }
+          const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
+          if (collapseTitle) {
+            collapseTitle.textContent = bucket.getBucketName().toString();
           }
-
-          bucket_list.appendChild(fragment);
         }
+
+        bucket_list.appendChild(fragment);
       }
-    );
+    });
   }
 
   function setupEventListeners(bucket_list: HTMLElement): void {

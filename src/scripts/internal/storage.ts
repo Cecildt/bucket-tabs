@@ -1,6 +1,12 @@
 // Description: Logic for storing and retrieving data from local storage
 
-import type { BucketDataModel } from "./bucket-data-model";
+import { BucketDataModel } from "./bucket-data-model";
+
+interface BucketStorageDataModel {
+    BucketID: String;
+    BucketName: String;
+    Order: Number;
+}
 
 export function initStorage(): void {
   console.log('Storage initialized');
@@ -15,7 +21,17 @@ export function initStorage(): void {
 }
 
 export function getBucketsStorage(): Promise<Array<BucketDataModel>> {
-  return getStorage('buckets');
+  let storedBuckets: Array<BucketDataModel> = [];
+
+  getStorage('buckets').then((buckets: Array<BucketStorageDataModel>) => {
+      if (buckets.length === 0) {
+        buckets.forEach((bucket: BucketStorageDataModel) => {
+        storedBuckets.push(new BucketDataModel(bucket.BucketName, bucket.Order));
+        });
+      }
+  });
+
+  return Promise.resolve(storedBuckets);
 }
 
 export function setBucketsStorage(buckets: Array<BucketDataModel>): void {

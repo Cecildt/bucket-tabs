@@ -1,18 +1,9 @@
 ---
-import BucketGroup from './BucketGroup.astro';
 import RenameBucketDialog from './RenameBucketDialog.astro';
 ---
 
-<ul id="buckets-list" class="z-0">
-  <!-- <li>
-    <BucketGroup id="bucket-5" name="Bucket 5" star="true" locked="true" />
-  </li> -->
-</ul>
-<ul id="buckets-list-archive" class="z-0">
-  <li>
-    <BucketGroup id="bucket-archive" name="Archive Bucket" />
-  </li>
-</ul>
+<ul id="buckets-list" class="z-0"></ul>
+<ul id="buckets-list-archive" class="z-0"></ul>
 
 <RenameBucketDialog />
 
@@ -33,11 +24,22 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
     setupEventListeners(bucket_list);
-    loadBuckets(bucket_list);
+    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    loadBuckets(bucket_list, buckets);
   }
 
-  function loadBuckets(bucket_list: HTMLElement): void {
-    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
+  const bucket_list_archive = document.getElementById('buckets-list-archive');
+  if (bucket_list_archive) {
+    setupEventListeners(bucket_list_archive);
+    let bucketsArchive =
+      window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+    loadBuckets(bucket_list_archive, bucketsArchive);
+  }
+
+  function loadBuckets(
+    bucket_list: HTMLElement,
+    buckets: BucketDataModel[]
+  ): void {
     buckets.forEach((bucket: BucketDataModel) => {
       const bucket_template = document.getElementById('template-bucket');
 
@@ -50,7 +52,6 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
       if (newBucket) {
         console.log('Setup Bucket');
         if (fragment.firstChild) {
-          const totalBuckets = bucket_list.childElementCount + 1;
           fragment.firstChild.appendChild(newBucket);
           let bucketEL = fragment.firstChild.firstChild as HTMLElement;
           let bucketID = bucket.getBucketID().toString();

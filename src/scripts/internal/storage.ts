@@ -29,33 +29,32 @@ export function initStorage(): void {
   }
 }
 
-export function getBucketsStorage(): Promise<Array<BucketDataModel>> {
+export async function getBucketsStorage(): Promise<Array<BucketDataModel>> {
   let storedBuckets: Array<BucketDataModel> = [];
 
-  getStorage('buckets').then((buckets: Array<BucketStorageDataModel>) => {
-    if (buckets.length === 0) {
-      buckets.forEach((bucket: BucketStorageDataModel) => {
-        let newBucket = new BucketDataModel(
-          bucket.BucketID,
-          bucket.BucketName,
-          bucket.Order
+  const buckets: Array<BucketStorageDataModel> = await getStorage('buckets');
+  if (buckets.length > 0) {
+    buckets.forEach((bucket: BucketStorageDataModel) => {
+      let newBucket = new BucketDataModel(
+        bucket.BucketID,
+        bucket.BucketName,
+        bucket.Order
+      );
+
+      bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
+        let tabData = new TabDataModel(
+          tab.TabID,
+          tab.TabName,
+          tab.TabURL,
+          tab.TabBucketID,
+          tab.Order
         );
-
-        bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
-          let tabData = new TabDataModel(
-            tab.TabID,
-            tab.TabName,
-            tab.TabURL,
-            tab.TabBucketID,
-            tab.Order
-          );
-          newBucket.addTab(tabData);
-        });
-
-        storedBuckets.push(newBucket);
+        newBucket.addTab(tabData);
       });
-    }
-  });
+
+      storedBuckets.push(newBucket);
+    });
+  }
 
   return Promise.resolve(storedBuckets);
 }
@@ -77,7 +76,7 @@ export function setBucketsStorage(buckets: Array<BucketDataModel>): void {
 
       storedTabs.push(storedTab);
     });
-    
+
     let storageBucket: BucketStorageDataModel = {
       BucketID: bucket.getBucketID(),
       BucketName: bucket.getBucketName(),
@@ -91,32 +90,32 @@ export function setBucketsStorage(buckets: Array<BucketDataModel>): void {
   setStorage('buckets', storageBuckets);
 }
 
-export function getArchivedStorage(): Promise<Array<BucketDataModel>> {
+export async function getArchivedStorage(): Promise<Array<BucketDataModel>> {
   let storedBuckets: Array<BucketDataModel> = [];
 
-  getStorage('archived').then((buckets: Array<BucketStorageDataModel>) => {
-    if (buckets.length === 0) {
-      buckets.forEach((bucket: BucketStorageDataModel) => {
-        let newBucket = new BucketDataModel(
-          bucket.BucketID,
-          bucket.BucketName,
-          bucket.Order
-        );
+  const buckets: Array<BucketStorageDataModel> = await getStorage('archived');
 
-        bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
-          let tabData = new TabDataModel(
-            tab.TabID,
-            tab.TabName,
-            tab.TabURL,
-            tab.TabBucketID,
-            tab.Order
-          );
-          newBucket.addTab(tabData);
-        });
-        storedBuckets.push(newBucket);
+  if (buckets.length > 0) {
+    buckets.forEach((bucket: BucketStorageDataModel) => {
+      let newBucket = new BucketDataModel(
+        bucket.BucketID,
+        bucket.BucketName,
+        bucket.Order
+      );
+
+      bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
+        let tabData = new TabDataModel(
+          tab.TabID,
+          tab.TabName,
+          tab.TabURL,
+          tab.TabBucketID,
+          tab.Order
+        );
+        newBucket.addTab(tabData);
       });
-    }
-  });
+      storedBuckets.push(newBucket);
+    });
+  }
 
   return Promise.resolve(storedBuckets);
 }
@@ -138,7 +137,7 @@ export function setArchivedStorage(archived: Array<BucketDataModel>): void {
 
       storageTabs.push(storageTab);
     });
-    
+
     let storageBucket: BucketStorageDataModel = {
       BucketID: bucket.getBucketID(),
       BucketName: bucket.getBucketName(),
@@ -152,7 +151,7 @@ export function setArchivedStorage(archived: Array<BucketDataModel>): void {
   setStorage('archived', storageBuckets);
 }
 
-export function getStorage(key: string): Promise<any> {
+export async function getStorage(key: string): Promise<any> {
   return new Promise((resolve, reject) => {
     if (window.globalBucketTabsState.getBrowserStorage()) {
       let keys = localStorage.getItem(key);

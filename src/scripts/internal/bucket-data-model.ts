@@ -57,6 +57,10 @@ export class BucketListDataModel {
   getBuckets(): Array<BucketDataModel> {
     return this.Buckets;
   }
+
+  getArchivedBuckets(): Array<BucketDataModel> {
+    return this.Archived;
+  }
 }
 
 export class BucketDataModel {

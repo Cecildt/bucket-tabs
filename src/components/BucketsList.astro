@@ -9,6 +9,7 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 
 <script>
   import type { BucketDataModel } from '../scripts/internal/bucket-data-model';
+import { BucketEvents } from '../scripts/internal/BucketSignals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
@@ -108,6 +109,20 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
           renameBucketDialog?.showModal(); // DaisyUI modal method
         }
       }
+
+      // bt-action-delete-bucket
+      if (targetElement.classList.contains('bt-action-delete-bucket')) {
+        console.log('Delete bucket');
+
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.BucketSignals.emit(BucketEvents.DeleteBucket, bucketId);
+        }
+      }
+
     });
   }
 </script>

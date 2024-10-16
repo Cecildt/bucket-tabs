@@ -58,6 +58,10 @@ export class BucketListDataModel {
     return this.Buckets;
   }
 
+  getBucketByID(bucketID: String) : BucketDataModel | undefined {
+    return this.Buckets.find((bucket) => bucket.getBucketID() === bucketID);
+  }
+
   getArchivedBuckets(): Array<BucketDataModel> {
     return this.Archived;
   }

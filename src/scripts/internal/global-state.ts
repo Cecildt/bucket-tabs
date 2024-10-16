@@ -1,10 +1,13 @@
 import { BucketListDataModel } from './bucket-data-model';
+import { BucketSignals } from './BucketSignals';
 
 export class GlobalBucketTabsState {
     private CurrentBucketID: String = '';
     private CurrentBucketName: String = '';
     private BrowserStorage: Boolean = false;
+    
     public BucketListDataModel: BucketListDataModel = new BucketListDataModel();
+    public BucketSignals = new BucketSignals();
 
     
     constructor() {

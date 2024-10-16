@@ -33,10 +33,7 @@ import BucketGroup from '../components/BucketGroup.astro';
   </style>
 
   <script>
-    import { BucketDataModel } from '../scripts/internal/bucket-data-model';
-
-    console.log('Buckets inline script loaded');
-    // initStorage();
+    import { BucketEvents } from '../scripts/internal/BucketSignals';
 
     const opt_expand_all = document.getElementById('opt-expand-all');
     if (opt_expand_all) {
@@ -106,52 +103,7 @@ import BucketGroup from '../components/BucketGroup.astro';
     if (opt_add_bucket) {
       opt_add_bucket.addEventListener('click', async () => {
         console.log('Option Add Bucket clicked');
-        const bucket_template = document.getElementById('template-bucket');
-
-        if (!bucket_template) return;
-
-        const bucketList = document.getElementById('buckets-list');
-
-        if (!bucketList) return;
-
-        let bucketsCount =
-          window.globalBucketTabsState.BucketListDataModel.getBuckets().length + 1;
-        let newBucketData = new BucketDataModel(
-          undefined,
-          'New Bucket - ' + bucketsCount,
-          bucketsCount
-        );
-        window.globalBucketTabsState.BucketListDataModel.addBucket(
-          newBucketData
-        );
-
-        const fragment = document.createDocumentFragment();
-        fragment.appendChild(document.createElement('li'));
-        let newBucket = bucket_template.cloneNode(true);
-
-        if (newBucket) {
-          console.log('Setup Bucket');
-          if (fragment.firstChild) {
-            fragment.firstChild.appendChild(newBucket);
-            let bucket = fragment.firstChild.firstChild;
-            (bucket as HTMLElement).removeAttribute('id');
-            (bucket as HTMLElement).setAttribute(
-              'id',
-              newBucketData.getBucketID().toString()
-            );
-
-            const collapseTitle = (bucket as HTMLElement).querySelector(
-              '.collapse-title'
-            );
-            if (collapseTitle) {
-              collapseTitle.textContent = newBucketData
-                .getBucketName()
-                .toString();
-            }
-          }
-
-          bucketList?.appendChild(fragment);
-        }
+        window.globalBucketTabsState.BucketSignals.emit(BucketEvents.AddBucket);
       });
     }
   </script>

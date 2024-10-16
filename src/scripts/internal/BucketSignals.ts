@@ -1,109 +1,133 @@
-import { BucketDataModel } from "./bucket-data-model";
-import { createSignal } from "./signals";
+import { BucketDataModel } from './bucket-data-model';
+import { createSignal } from './signals';
 
 export enum BucketEvents {
-    AddBucket,
-    DeleteBucket
+  LoadBuckets,
+  AddBucket,
+  DeleteBucket,
 }
 
-export class BucketSignals{
-    private addBucketSignal = createSignal<void>();
-    private deleteBucketSignal = createSignal<String>();
-    
-    constructor(){
-        this.addBucketSignal(() => {
-            console.log('Signal: Add Bucket');
-            this.addBucketViewData();
-        });
-        
-        this.deleteBucketSignal((bucketID) => {
-            console.log('Signal: Delete Bucket');
-            this.deleteBucketViewData(bucketID);
-        });
+export class BucketSignals {
+  private loadBucketsSignal = createSignal<void>();
+  private addBucketSignal = createSignal<void>();
+  private deleteBucketSignal = createSignal<String>();
+
+  constructor() {
+    this.loadBucketsSignal(() => {
+      console.log('Signal: Load Buckets');
+      this.loadBucketsViewData();
+    });
+
+    this.addBucketSignal(() => {
+      console.log('Signal: Add Bucket');
+      this.addBucketViewData();
+    });
+
+    this.deleteBucketSignal((bucketID) => {
+      console.log('Signal: Delete Bucket');
+      this.deleteBucketViewData(bucketID);
+    });
+  }
+
+  emit(event: BucketEvents, value?: any) {
+    switch (event) {
+      case BucketEvents.LoadBuckets:
+        this.loadBucketsSignal();
+        break;
+      case BucketEvents.AddBucket:
+        this.addBucketSignal();
+        break;
+      case BucketEvents.DeleteBucket:
+        this.deleteBucketSignal(value);
+        break;
+
+      default:
+        console.error('No bucket signal match!');
+        break;
     }
-    
-    emit(event: BucketEvents, value?: any){
-        switch (event) {
-            case BucketEvents.AddBucket:
-                this.addBucketSignal();
-                break;
-            case BucketEvents.DeleteBucket:
-                this.deleteBucketSignal(value);
-                break;
-        
-            default:
-                console.error('No bucket signal match!');
-                break;
-        }
+  }
+
+  private loadBucketsViewData() {
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private addBucketViewData() {
+    // Data
+    let bucketsCount =
+      window.globalBucketTabsState.BucketListDataModel.getBuckets().length + 1;
+    let newBucketData = new BucketDataModel(
+      undefined,
+      'New Bucket - ' + bucketsCount,
+      bucketsCount
+    );
+
+    window.globalBucketTabsState.BucketListDataModel.addBucket(newBucketData);
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private deleteBucketViewData(bucketID: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      window.globalBucketTabsState.BucketListDataModel.removeBucket(bucket);
     }
 
-    private addBucketViewData(){
-        const bucket_template = document.getElementById('template-bucket');
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
 
-        if (!bucket_template) return;
+  private renderBucketsView(
+    bucket_list: HTMLElement,
+    buckets: BucketDataModel[]
+  ): void {
+    const bucketsFragment = document.createDocumentFragment();
 
-        const bucketList = document.getElementById('buckets-list');
+    buckets.forEach((bucket: BucketDataModel) => {
+      const bucket_template = document.getElementById('template-bucket');
 
-        if (!bucketList) return;
+      if (!bucket_template) return;
 
-        let bucketsCount =
-          window.globalBucketTabsState.BucketListDataModel.getBuckets().length + 1;
-        let newBucketData = new BucketDataModel(
-          undefined,
-          'New Bucket - ' + bucketsCount,
-          bucketsCount
-        );
-        window.globalBucketTabsState.BucketListDataModel.addBucket(
-          newBucketData
-        );
+      const fragment = document.createDocumentFragment();
+      fragment.appendChild(document.createElement('li'));
+      let newBucket = bucket_template.cloneNode(true);
 
-        const fragment = document.createDocumentFragment();
-        fragment.appendChild(document.createElement('li'));
-        let newBucket = bucket_template.cloneNode(true);
+      if (newBucket) {
+        if (fragment.firstChild) {
+          fragment.firstChild.appendChild(newBucket);
+          let bucketEL = fragment.firstChild.firstChild as HTMLElement;
+          let bucketID = bucket.getBucketID().toString();
+          bucketEL.removeAttribute('id');
+          bucketEL.setAttribute('id', bucketID);
 
-        if (newBucket) {
-          if (fragment.firstChild) {
-            fragment.firstChild.appendChild(newBucket);
-            let bucket = fragment.firstChild.firstChild;
-            (bucket as HTMLElement).removeAttribute('id');
-            (bucket as HTMLElement).setAttribute(
-              'id',
-              newBucketData.getBucketID().toString()
-            );
-
-            const collapseTitle = (bucket as HTMLElement).querySelector(
-              '.collapse-title'
-            );
-            if (collapseTitle) {
-              collapseTitle.textContent = newBucketData
-                .getBucketName()
-                .toString();
-            }
+          const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
+          if (collapseTitle) {
+            collapseTitle.textContent = bucket.getBucketName().toString();
           }
-
-          bucketList?.appendChild(fragment);
-        }
-    }
-    
-    private deleteBucketViewData(bucketID: String){
-        // Data
-        let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
-
-        if (bucket) {
-            window.globalBucketTabsState.BucketListDataModel.removeBucket(bucket);    
         }
 
-        // View
-        let bucketGroupEl = document.getElementById(bucketID.toString());
-        
-        if (bucketGroupEl) {
-            bucketGroupEl.remove();
-        }
-        
-    }
+        bucketsFragment.appendChild(fragment);
+      }
+    });
 
-    private renderBuckets(){
-        
-    }
-
+    bucket_list.replaceChildren(bucketsFragment);
+  }
 }

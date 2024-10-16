@@ -77,7 +77,6 @@ export class BucketDataModel {
     this.BucketID = id;
     this.BucketName = name;
     this.Order = order;
-    console.log(this.BucketID);
   }
 
   addTab(tab: TabDataModel): void {

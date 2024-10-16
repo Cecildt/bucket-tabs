@@ -9,7 +9,7 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 
 <script>
   import type { BucketDataModel } from '../scripts/internal/bucket-data-model';
-import { BucketEvents } from '../scripts/internal/BucketSignals';
+  import { BucketEvents } from '../scripts/internal/BucketSignals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
@@ -25,8 +25,7 @@ import { BucketEvents } from '../scripts/internal/BucketSignals';
   const bucket_list = document.getElementById('buckets-list');
   if (bucket_list) {
     setupEventListeners(bucket_list);
-    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
-    loadBuckets(bucket_list, buckets);
+    window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadBuckets);
   }
 
   const bucket_list_archive = document.getElementById('buckets-list-archive');
@@ -119,10 +118,12 @@ import { BucketEvents } from '../scripts/internal/BucketSignals';
         if (bucketGroup) {
           const bucketId = bucketGroup.id;
           window.globalBucketTabsState.setCurrentBucketID(bucketId);
-          window.globalBucketTabsState.BucketSignals.emit(BucketEvents.DeleteBucket, bucketId);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.DeleteBucket,
+            bucketId
+          );
         }
       }
-
     });
   }
 </script>

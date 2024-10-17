@@ -8,13 +8,11 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
 <RenameBucketDialog />
 
 <script>
-  import type { BucketDataModel } from '../scripts/internal/bucket-data-model';
-  import { BucketEvents } from '../scripts/internal/BucketSignals';
+  import { BucketEvents } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
-  window.globalBucketTabsState.setBrowserStorage(true);
-  await window.globalBucketTabsState.initDataSet();
+  await window.globalBucketTabsState.BucketListDataModel.initDataSet();
 
   if (
     window.globalBucketTabsState.BucketListDataModel.getBuckets().length === 0
@@ -31,42 +29,7 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
   const bucket_list_archive = document.getElementById('buckets-list-archive');
   if (bucket_list_archive) {
     setupEventListeners(bucket_list_archive);
-    let bucketsArchive =
-      window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
-    loadBuckets(bucket_list_archive, bucketsArchive);
-  }
-
-  function loadBuckets(
-    bucket_list: HTMLElement,
-    buckets: BucketDataModel[]
-  ): void {
-    buckets.forEach((bucket: BucketDataModel) => {
-      const bucket_template = document.getElementById('template-bucket');
-
-      if (!bucket_template) return;
-
-      const fragment = document.createDocumentFragment();
-      fragment.appendChild(document.createElement('li'));
-      let newBucket = bucket_template.cloneNode(true);
-
-      if (newBucket) {
-        console.log('Setup Bucket');
-        if (fragment.firstChild) {
-          fragment.firstChild.appendChild(newBucket);
-          let bucketEL = fragment.firstChild.firstChild as HTMLElement;
-          let bucketID = bucket.getBucketID().toString();
-          bucketEL.removeAttribute('id');
-          bucketEL.setAttribute('id', bucketID);
-
-          const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
-          if (collapseTitle) {
-            collapseTitle.textContent = bucket.getBucketName().toString();
-          }
-        }
-
-        bucket_list.appendChild(fragment);
-      }
-    });
+    window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadArchive);
   }
 
   function setupEventListeners(bucket_list: HTMLElement): void {

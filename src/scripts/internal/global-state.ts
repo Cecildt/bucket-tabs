@@ -1,10 +1,9 @@
 import { BucketListDataModel } from './bucket-data-model';
-import { BucketSignals } from './BucketSignals';
+import { BucketSignals } from './bucket-signals';
 
 export class GlobalBucketTabsState {
-    private CurrentBucketID: String = '';
-    private CurrentBucketName: String = '';
-    private BrowserStorage: Boolean = false;
+    private _currentBucketID: String = '';
+    private _currentBucketName: String = '';
     
     public BucketListDataModel: BucketListDataModel = new BucketListDataModel();
     public BucketSignals = new BucketSignals();
@@ -18,26 +17,18 @@ export class GlobalBucketTabsState {
     }
 
     setCurrentBucketName(name: String): void{
-        this.CurrentBucketName = name;
+        this._currentBucketName = name;
     }
 
     getCurrentBucketName(): String {
-        return this.CurrentBucketName;
+        return this._currentBucketName;
     }
 
     setCurrentBucketID(id: String): void{
-        this.CurrentBucketID = id;
+        this._currentBucketID = id;
     }
 
     getCurrentBucketID(): String {
-        return this.CurrentBucketID;
-    }
-
-    setBrowserStorage(value: Boolean): void {
-        this.BrowserStorage = value;
-    }
-
-    getBrowserStorage(): Boolean {
-        return this.BrowserStorage;
+        return this._currentBucketID;
     }
 }

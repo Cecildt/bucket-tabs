@@ -1,69 +1,87 @@
 import { ulid } from 'ulid';
-import {
-  setBucketsStorage,
-  getBucketsStorage,
-  getArchivedStorage,
-  setArchivedStorage,
-} from './storage';
+import { StorageAdapter } from './storage';
 
 export class BucketListDataModel {
-  private Buckets: Array<BucketDataModel> = [];
-  private Archived: Array<BucketDataModel> = [];
+  private _buckets: Array<BucketDataModel> = [];
+  private _archived: Array<BucketDataModel> = [];
+  private _storageAdapter = new StorageAdapter();
 
-  constructor() {}
+  constructor() {
+  }
 
   async initDataSet(): Promise<void> {
-    let buckets = await getBucketsStorage();
-    let archived = await getArchivedStorage();
+    let buckets = await this._storageAdapter.getBucketsStorage();
+    let archived = await this._storageAdapter.getArchivedStorage();
 
     if (buckets.length > 0) {
-      this.Buckets = buckets;
+      this._buckets = buckets;
     } else {
-      this.Buckets.push(new BucketDataModel(undefined, 'Default Bucket', 1));
-      setBucketsStorage(this.Buckets);
+      this._buckets.push(
+        new BucketDataModel(undefined, 'Default Bucket', 1, true)
+      );
+
+      this._storageAdapter.setBucketsStorage(this._buckets);
     }
 
     if (archived.length > 0) {
-      this.Archived = archived;
+      this._archived = archived;
     } else {
-      this.Archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1));
-      setArchivedStorage(this.Archived);
+      this._archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1));
+      this._storageAdapter.setArchivedStorage(this._archived);
     }
   }
 
   initDemoDataSet(): void {
-    this.Buckets.push(new BucketDataModel(undefined, 'Default Bucket', 1));
-    this.Buckets.push(new BucketDataModel(undefined, 'Demo Bucket', 2));
-    this.Archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1));
+    this._buckets = [];
+    this._buckets.push(
+      new BucketDataModel(undefined, 'Default Bucket', 1, true)
+    );
+    this._buckets.push(new BucketDataModel(undefined, 'Demo Bucket', 2));
 
-    setBucketsStorage(this.Buckets);
-    setArchivedStorage(this.Archived);
+    this._archived = [];
+    this._archived.push(
+      new BucketDataModel(undefined, 'Archived Bucket', 1, true)
+    );
+
+    this._storageAdapter.setBucketsStorage(this._buckets);
+    this._storageAdapter.setArchivedStorage(this._archived);
   }
 
   addBucket(bucket: BucketDataModel): void {
-    bucket.setOrder(this.Buckets.length + 1);
-    this.Buckets.push(bucket);
-    setBucketsStorage(this.Buckets);
+    bucket.setOrder(this._buckets.length + 1);
+    this._buckets.push(bucket);
+    this._storageAdapter.setBucketsStorage(this._buckets);
   }
 
   removeBucket(bucket: BucketDataModel): void {
-    let index = this.Buckets.indexOf(bucket);
+    let index = this._buckets.indexOf(bucket);
     if (index > -1) {
-      this.Buckets.splice(index, 1);
+      this._buckets.splice(index, 1);
     }
-    setBucketsStorage(this.Buckets);
+
+    this._storageAdapter.setBucketsStorage(this._buckets);
+  }
+
+  removeAllBuckets(): void {
+    let defaultBuckets = this._buckets.filter((bucket) => {
+      let defaultType = bucket.getDefaultType();
+      return defaultType === true;
+    });
+
+    this._buckets = defaultBuckets;
+    this._storageAdapter.setBucketsStorage(this._buckets);
   }
 
   getBuckets(): Array<BucketDataModel> {
-    return this.Buckets;
+    return this._buckets;
   }
 
-  getBucketByID(bucketID: String) : BucketDataModel | undefined {
-    return this.Buckets.find((bucket) => bucket.getBucketID() === bucketID);
+  getBucketByID(bucketID: String): BucketDataModel | undefined {
+    return this._buckets.find((bucket) => bucket.getBucketID() === bucketID);
   }
 
   getArchivedBuckets(): Array<BucketDataModel> {
-    return this.Archived;
+    return this._archived;
   }
 }
 
@@ -72,11 +90,18 @@ export class BucketDataModel {
   private BucketName: String = '';
   private Order: Number = -1;
   private BucketTabs: Array<TabDataModel> = [];
+  private DefaultType: Boolean = false;
 
-  constructor(id: String = ulid(), name: String, order: Number) {
+  constructor(
+    id: String = ulid(),
+    name: String,
+    order: Number,
+    defaultType?: Boolean
+  ) {
     this.BucketID = id;
     this.BucketName = name;
     this.Order = order;
+    this.DefaultType = defaultType || false;
   }
 
   addTab(tab: TabDataModel): void {
@@ -109,6 +134,10 @@ export class BucketDataModel {
 
   getBucketName(): String {
     return this.BucketName;
+  }
+
+  getDefaultType(): Boolean {
+    return this.DefaultType;
   }
 }
 

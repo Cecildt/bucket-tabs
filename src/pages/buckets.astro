@@ -33,7 +33,7 @@ import BucketGroup from '../components/BucketGroup.astro';
   </style>
 
   <script>
-    import { BucketEvents } from '../scripts/internal/BucketSignals';
+    import { BucketEvents } from '../scripts/internal/bucket-signals';
 
     const opt_expand_all = document.getElementById('opt-expand-all');
     if (opt_expand_all) {
@@ -82,27 +82,13 @@ import BucketGroup from '../components/BucketGroup.astro';
     const opt_delete_buckets = document.getElementById('opt-delete-buckets');
     if (opt_delete_buckets) {
       opt_delete_buckets.addEventListener('click', async () => {
-        console.log('Option Delete Buckets clicked');
-        const bucketList = document.getElementById('buckets-list');
-
-        if (!bucketList) return;
-
-        const buckets = bucketList.querySelectorAll('li');
-
-        if (!buckets) return;
-
-        console.log('Buckets: ', buckets.length);
-
-        Array.prototype.forEach.call(buckets, (li) => {
-          bucketList.removeChild(li);
-        });
+        window.globalBucketTabsState.BucketSignals.emit(BucketEvents.DeleteAllBuckets);
       });
     }
 
     const opt_add_bucket = document.getElementById('opt-add-bucket');
     if (opt_add_bucket) {
       opt_add_bucket.addEventListener('click', async () => {
-        console.log('Option Add Bucket clicked');
         window.globalBucketTabsState.BucketSignals.emit(BucketEvents.AddBucket);
       });
     }

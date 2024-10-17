@@ -3,19 +3,56 @@ import { createSignal } from './signals';
 
 export enum BucketEvents {
   LoadBuckets,
+  LoadArchive,
   AddBucket,
   DeleteBucket,
+  DeleteAllBuckets,
 }
 
 export class BucketSignals {
   private loadBucketsSignal = createSignal<void>();
+  private loadArchiveSignal = createSignal<void>();
   private addBucketSignal = createSignal<void>();
   private deleteBucketSignal = createSignal<String>();
+  private deleteAllBucketsSignal = createSignal<void>();
 
   constructor() {
+    this.setupSignals();
+  }
+
+  emit(event: BucketEvents, value?: any) {
+    switch (event) {
+      case BucketEvents.LoadBuckets:
+        this.loadBucketsSignal();
+        break;
+      case BucketEvents.LoadArchive:
+        this.loadArchiveSignal();
+        break;
+      case BucketEvents.AddBucket:
+        this.addBucketSignal();
+        break;
+      case BucketEvents.DeleteBucket:
+        this.deleteBucketSignal(value);
+        break;
+      case BucketEvents.DeleteAllBuckets:
+        this.deleteAllBucketsSignal();
+        break;
+
+      default:
+        console.error('No bucket signal match!');
+        break;
+    }
+  }
+
+  private setupSignals() {
     this.loadBucketsSignal(() => {
       console.log('Signal: Load Buckets');
       this.loadBucketsViewData();
+    });
+
+    this.loadArchiveSignal(() => {
+      console.log('Signal: Load Archive');
+      this.loadArchiveViewData();
     });
 
     this.addBucketSignal(() => {
@@ -27,31 +64,28 @@ export class BucketSignals {
       console.log('Signal: Delete Bucket');
       this.deleteBucketViewData(bucketID);
     });
+
+    this.deleteAllBucketsSignal(() => {
+      console.log('Signal: Delete All Buckets');
+      this.deleteAllBucketsViewData();
+    });
   }
 
-  emit(event: BucketEvents, value?: any) {
-    switch (event) {
-      case BucketEvents.LoadBuckets:
-        this.loadBucketsSignal();
-        break;
-      case BucketEvents.AddBucket:
-        this.addBucketSignal();
-        break;
-      case BucketEvents.DeleteBucket:
-        this.deleteBucketSignal(value);
-        break;
-
-      default:
-        console.error('No bucket signal match!');
-        break;
-    }
-  }
-
+  // Signals functions
   private loadBucketsViewData() {
     const bucketListEl = document.getElementById('buckets-list');
     if (bucketListEl) {
       let buckets =
         window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private loadArchiveViewData() {
+    const bucketListEl = document.getElementById('buckets-list-archive');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
       this.renderBucketsView(bucketListEl, buckets);
     }
   }
@@ -95,6 +129,20 @@ export class BucketSignals {
     }
   }
 
+  private deleteAllBucketsViewData() {
+    // Data
+    window.globalBucketTabsState.BucketListDataModel.removeAllBuckets();
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  // Supporting functions
   private renderBucketsView(
     bucket_list: HTMLElement,
     buckets: BucketDataModel[]

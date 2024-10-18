@@ -38,17 +38,27 @@ import BucketGroup from '../components/BucketGroup.astro';
     const opt_expand_all = document.getElementById('opt-expand-all');
     if (opt_expand_all) {
       opt_expand_all.addEventListener('click', async () => {
-        console.log('Option Expand All clicked');
-
+        // Buckets
         const buckets = document
           .getElementById('buckets-list')
           ?.getElementsByClassName('bt-bucket-group');
 
         if (!buckets) return;
 
-        console.log('Buckets: ', buckets.length);
         for (let bucket = 0; bucket < buckets.length; bucket++) {
           const element = buckets[bucket];
+          element.getElementsByTagName('input')[0].checked = true;
+        }
+
+        // Archived Bucket
+        const archivedBuckets = document
+          .getElementById('buckets-list-archive')
+          ?.getElementsByClassName('bt-bucket-group');
+
+        if (!archivedBuckets) return;
+
+        for (let bucket = 0; bucket < archivedBuckets.length; bucket++) {
+          const element = archivedBuckets[bucket];
           element.getElementsByTagName('input')[0].checked = true;
         }
       });
@@ -57,16 +67,27 @@ import BucketGroup from '../components/BucketGroup.astro';
     const opt_collapse_all = document.getElementById('opt-collapse-all');
     if (opt_collapse_all) {
       opt_collapse_all.addEventListener('click', async () => {
-        console.log('Option Collapse All clicked');
+        // Buckets
         const buckets = document
           .getElementById('buckets-list')
           ?.getElementsByClassName('bt-bucket-group');
 
         if (!buckets) return;
 
-        console.log('Buckets: ', buckets.length);
         for (let bucket = 0; bucket < buckets.length; bucket++) {
           const element = buckets[bucket];
+          element.getElementsByTagName('input')[0].checked = false;
+        }
+
+        // Archived Bucket
+        const archivedBuckets = document
+          .getElementById('buckets-list-archive')
+          ?.getElementsByClassName('bt-bucket-group');
+
+        if (!archivedBuckets) return;
+
+        for (let bucket = 0; bucket < archivedBuckets.length; bucket++) {
+          const element = archivedBuckets[bucket];
           element.getElementsByTagName('input')[0].checked = false;
         }
       });
@@ -82,7 +103,9 @@ import BucketGroup from '../components/BucketGroup.astro';
     const opt_delete_buckets = document.getElementById('opt-delete-buckets');
     if (opt_delete_buckets) {
       opt_delete_buckets.addEventListener('click', async () => {
-        window.globalBucketTabsState.BucketSignals.emit(BucketEvents.DeleteAllBuckets);
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.DeleteAllBuckets
+        );
       });
     }
 

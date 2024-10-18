@@ -96,7 +96,9 @@ import BucketGroup from '../components/BucketGroup.astro';
     const opt_export_buckets = document.getElementById('opt-export-buckets');
     if (opt_export_buckets) {
       opt_export_buckets.addEventListener('click', async () => {
-        console.log('Option Export Buckets clicked');
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.ExportBuckets
+        );
       });
     }
 

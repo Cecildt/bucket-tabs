@@ -91,17 +91,23 @@ export class BucketDataModel {
   private Order: Number = -1;
   private BucketTabs: Array<TabDataModel> = [];
   private DefaultType: Boolean = false;
+  private Starred: Boolean = false;
+  private Locked: Boolean = false;
 
   constructor(
     id: String = ulid(),
     name: String,
     order: Number,
-    defaultType?: Boolean
+    defaultType?: Boolean,
+    starred?: Boolean,
+    locked?: Boolean
   ) {
     this.BucketID = id;
     this.BucketName = name;
     this.Order = order;
     this.DefaultType = defaultType || false;
+    this.Starred = starred || false;
+    this.Locked = locked || false;
   }
 
   addTab(tab: TabDataModel): void {
@@ -138,6 +144,22 @@ export class BucketDataModel {
 
   getDefaultType(): Boolean {
     return this.DefaultType;
+  }
+
+  getStarred(): Boolean {
+    return this.Starred;
+  }
+
+  setStarred(value: Boolean): void {
+    this.Starred = value;
+  }
+
+  getLocked(): Boolean {
+    return this.Locked;
+  }
+
+  setLocked(value: Boolean): void {
+    this.Locked = value;
   }
 }
 

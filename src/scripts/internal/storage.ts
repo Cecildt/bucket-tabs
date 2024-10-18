@@ -7,7 +7,9 @@ interface BucketStorageDataModel {
   BucketName: String;
   Order: Number;
   BucketTabs: Array<TabStorageDataModel>;
-  DefaultType: Boolean
+  DefaultType: Boolean,
+  Starred: Boolean,
+  Locked: Boolean
 }
 
 interface TabStorageDataModel {
@@ -46,7 +48,9 @@ export class StorageAdapter {
           bucket.BucketID,
           bucket.BucketName,
           bucket.Order,
-          bucket.DefaultType
+          bucket.DefaultType,
+          bucket.Starred,
+          bucket.Locked
         );
   
         bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
@@ -91,6 +95,8 @@ export class StorageAdapter {
         Order: bucket.getOrder(),
         DefaultType: bucket.getDefaultType(),
         BucketTabs: storedTabs,
+        Starred: bucket.getStarred(),
+        Locked: bucket.getLocked(),
       };
   
       storageBuckets.push(storageBucket);
@@ -110,7 +116,9 @@ export class StorageAdapter {
           bucket.BucketID,
           bucket.BucketName,
           bucket.Order,
-          bucket.DefaultType
+          bucket.DefaultType,
+          bucket.Starred,
+          bucket.Locked
         );
   
         bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
@@ -154,6 +162,8 @@ export class StorageAdapter {
         Order: bucket.getOrder(),
         DefaultType: bucket.getDefaultType(),
         BucketTabs: storageTabs,
+        Starred: bucket.getStarred(),
+        Locked: bucket.getLocked()
       };
   
       storageBuckets.push(storageBucket);

@@ -204,6 +204,5 @@ export class BucketSignals {
     a.href = url;
     a.download = 'buckets-export.json';
     a.click();
-    // document.body.removeChild(a);
   }
 }

@@ -83,6 +83,28 @@ export class BucketListDataModel {
   getArchivedBuckets(): Array<BucketDataModel> {
     return this._archived;
   }
+
+  saveBucket(bucket: BucketDataModel): void {
+    let index = this._buckets.findIndex(
+      (item) => item.getBucketID() === bucket.getBucketID()
+    );
+
+    if (index > -1) {
+      this._buckets[index] = bucket;
+      this._storageAdapter.setBucketsStorage(this._buckets);
+    }
+  }
+
+  saveArchiveBucket(bucket: BucketDataModel): void {
+    let index = this._archived.findIndex(
+      (item) => item.getBucketID() === bucket.getBucketID()
+    );
+
+    if (index > -1) {
+      this._archived[index] = bucket;
+      this._storageAdapter.setArchivedStorage(this._archived);
+    }
+  }
 }
 
 export class BucketDataModel {

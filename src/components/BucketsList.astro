@@ -42,10 +42,36 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
         );
       }
 
+      // bt-action-lock-bucket
+      if (targetElement.classList.contains('bt-action-lock-bucket')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LockBucket,
+            bucketId
+          );
+        }
+      }
+
+      // bt-action-star-bucket
+      if (targetElement.classList.contains('bt-action-star-bucket')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.StarBucket,
+            bucketId
+          );
+        }
+      }
+
       // bt-action-rename-bucket
       if (targetElement.classList.contains('bt-action-rename-bucket')) {
-        console.log('Rename bucket');
-
         const bucketGroup = targetElement.closest('.bt-bucket-group');
         let bucketName = '';
 
@@ -72,10 +98,22 @@ import RenameBucketDialog from './RenameBucketDialog.astro';
         }
       }
 
+      // bt-action-archive-bucket
+      if (targetElement.classList.contains('bt-action-archive-bucket')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.ArchiveBucket,
+            bucketId
+          );
+        }
+      }
+
       // bt-action-delete-bucket
       if (targetElement.classList.contains('bt-action-delete-bucket')) {
-        console.log('Delete bucket');
-
         const bucketGroup = targetElement.closest('.bt-bucket-group');
 
         if (bucketGroup) {

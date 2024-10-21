@@ -12,10 +12,10 @@ const { name, id, star, locked } = Astro.props;
 >
   <input type="checkbox" />
   <div class="collapse-title text-xl font-medium">
-    <button class="btn btn-circle btn-xs" style={star ? "" : "display:none"}>
+    <button class="btn btn-circle btn-xs bt-bucket-star" style={star ? "" : "display:none"}>
       <StarIcon />
     </button>
-    <button class="btn btn-circle btn-xs" style={locked ? "" : "display:none"}>
+    <button class="btn btn-circle btn-xs bt-bucket-lock" style={locked ? "" : "display:none"}>
       <LockIcon />
     </button>
     <span class="bt-bucket-name">{name}</span> - <span class="badge badge-primary">0</span>    

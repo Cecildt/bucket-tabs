@@ -8,6 +8,9 @@ export enum BucketEvents {
   DeleteBucket,
   DeleteAllBuckets,
   ExportBuckets,
+  ArchiveBucket,
+  LockBucket,
+  StarBucket,
 }
 
 export class BucketSignals {
@@ -17,6 +20,9 @@ export class BucketSignals {
   private _deleteBucketSignal = createSignal<String>();
   private _deleteAllBucketsSignal = createSignal<void>();
   private _exportBucketsSignal = createSignal<void>();
+  private _archiveBucketSignal = createSignal<String>();
+  private _lockBucketSignal = createSignal<String>();
+  private _starBucketSignal = createSignal<String>();
 
   constructor() {
     this.setupSignals();
@@ -39,9 +45,18 @@ export class BucketSignals {
       case BucketEvents.DeleteAllBuckets:
         this._deleteAllBucketsSignal();
         break;
-        case BucketEvents.ExportBuckets:
-          this._exportBucketsSignal();
-          break;
+      case BucketEvents.ExportBuckets:
+        this._exportBucketsSignal();
+        break;
+      case BucketEvents.ArchiveBucket:
+        this._archiveBucketSignal(value);
+        break;
+      case BucketEvents.LockBucket:
+        this._lockBucketSignal(value);
+        break;
+      case BucketEvents.StarBucket:
+        this._starBucketSignal(value);
+        break;
 
       default:
         console.error('No bucket signal match!');
@@ -78,6 +93,21 @@ export class BucketSignals {
     this._exportBucketsSignal(() => {
       console.log('Signal: Export Buckets');
       this.exportBucketsData();
+    });
+
+    this._archiveBucketSignal((bucketID) => {
+      console.log('Signal: Archive Bucket');
+      this.archiveBucketViewData(bucketID);
+    });
+
+    this._lockBucketSignal((bucketID) => {
+      console.log('Signal: Lock Bucket');
+      this.lockBucketViewData(bucketID);
+    });
+
+    this._starBucketSignal((bucketID) => {
+      console.log('Signal: Star Bucket');
+      this.starBucketViewData(bucketID);
     });
   }
 
@@ -180,6 +210,28 @@ export class BucketSignals {
           if (collapseTitle) {
             collapseTitle.textContent = bucket.getBucketName().toString();
           }
+
+          // Set Star
+          const star: HTMLElement | null =
+            bucketEL.querySelector('.bt-bucket-star');
+          if (star) {
+            if (bucket.getStarred()) {
+              star.style.display = '';
+            } else {
+              star.style.display = 'none';
+            }
+          }
+
+          // Set Lock
+          const lock: HTMLElement | null =
+            bucketEL.querySelector('.bt-bucket-lock');
+          if (lock) {
+            if (bucket.getLocked()) {
+              lock.style.display = '';
+            } else {
+              lock.style.display = 'none';
+            }
+          }
         }
 
         bucketsFragment.appendChild(fragment);
@@ -189,20 +241,93 @@ export class BucketSignals {
     bucket_list.replaceChildren(bucketsFragment);
   }
 
-  private exportBucketsData(){
+  private exportBucketsData() {
     // Data Export
-    const jsonData = window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    const jsonData =
+      window.globalBucketTabsState.BucketListDataModel.getBuckets();
 
-    const archiveData = window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+    const archiveData =
+      window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
     archiveData.forEach((bucket) => {
       jsonData.push(bucket);
     });
 
-    const blob = new Blob([JSON.stringify(jsonData)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(jsonData)], {
+      type: 'application/json',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'buckets-export.json';
     a.click();
+  }
+
+  private archiveBucketViewData(bucketID: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      let archiveBuckets =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+      if (archiveBuckets.length > 0) {
+        let archiveBucket = archiveBuckets[0];
+        bucket.getTabs().forEach((tab) => {
+          archiveBucket.addTab(tab);
+        });
+
+        window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+          archiveBucket
+        );
+      }
+
+      window.globalBucketTabsState.BucketListDataModel.removeBucket(bucket);
+    }
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private lockBucketViewData(bucketID: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      bucket.setLocked(!bucket.getLocked());
+      window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+    }
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private starBucketViewData(bucketID: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      bucket.setStarred(!bucket.getStarred());
+      window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+    }
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
   }
 }

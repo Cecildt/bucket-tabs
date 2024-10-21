@@ -1,0 +1,28 @@
+---
+import BucketActionsMenu from "./BucketActionsMenu.astro";
+import StarIcon from "../icons/StarIcon.astro";
+import LockIcon from "../icons/LockIcon.astro"
+import TabsList from "./TabsList.astro";
+
+---
+
+<div id="template-bucket"
+  class="collapse collapse-arrow bg-base-200 mt-2 bt-bucket-group"
+>
+  <input type="checkbox" />
+  <div class="collapse-title text-xl font-medium">
+    <button class="btn btn-circle btn-xs bt-bucket-star" style="display:none">
+      <StarIcon />
+    </button>
+    <button class="btn btn-circle btn-xs bt-bucket-lock" style="display:none">
+      <LockIcon />
+    </button>
+    <span class="bt-bucket-name">New Bucket</span> - <span class="badge badge-primary">0</span>    
+  </div>
+  <div class="collapse-content">
+    <BucketActionsMenu />
+    <div class="h-52">
+      <TabsList />
+    </div>
+  </div>
+</div>

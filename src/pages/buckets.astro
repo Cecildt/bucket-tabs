@@ -1,7 +1,9 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import BucketsList from '../components/BucketsList.astro';
-import BucketGroup from '../components/BucketGroup.astro';
+import TabItemTemplate from '../components/TabItemTemplate.astro';
+import BucketGroupTemplate from '../components/BucketGroupTemplate.astro';
+import RenameBucketDialog from '../components/RenameBucketDialog.astro';
 ---
 
 <html lang="en">
@@ -22,7 +24,11 @@ import BucketGroup from '../components/BucketGroup.astro';
       </div>
     </div>
     <div id="html-templates" hidden="true">
-      <BucketGroup id="template-bucket" name="New Bucket" />
+      <BucketGroupTemplate />
+      <TabItemTemplate />
+    </div>
+    <div id="html-dialogs" hidden="true">
+      <RenameBucketDialog />
     </div>
   </body>
 

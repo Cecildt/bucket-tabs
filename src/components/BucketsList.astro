@@ -10,7 +10,8 @@
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
-  await window.globalBucketTabsState.BucketListDataModel.initDataSet();
+  // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
+  await window.globalBucketTabsState.BucketListDataModel.initDemoDataSet();
 
   if (
     window.globalBucketTabsState.BucketListDataModel.getBuckets().length === 0

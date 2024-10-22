@@ -33,15 +33,31 @@ export class BucketListDataModel {
 
   initDemoDataSet(): void {
     this._buckets = [];
-    this._buckets.push(
-      new BucketDataModel(undefined, 'Default Bucket', 1, true)
+
+    let defaultBucket = new BucketDataModel(undefined, 'Default Bucket', 1, true);
+    defaultBucket.addTab(
+      new TabDataModel(1, 'Google', 'https://www.google.com', 1, 1)
     );
+    defaultBucket.addTab(
+      new TabDataModel(2, 'YouTube', 'https://www.youtube.com', 1, 2)
+    );
+    defaultBucket.addTab(
+      new TabDataModel(3, 'Reddit', 'https://www.reddit.com', 1, 3)
+    );
+
+    this._buckets.push(defaultBucket);
     this._buckets.push(new BucketDataModel(undefined, 'Demo Bucket', 2));
 
     this._archived = [];
-    this._archived.push(
-      new BucketDataModel(undefined, 'Archived Bucket', 1, true)
+    let archivedBuckets = new BucketDataModel(undefined, 'Archived Bucket', 1);
+    archivedBuckets.addTab(
+      new TabDataModel(1, 'GitHub', 'https://github.com', 1, 1)
     );
+    archivedBuckets.addTab(
+      new TabDataModel(2, 'StackOverflow', 'https://stackoverflow.com', 1, 2)
+    );
+
+    this._archived.push(archivedBuckets);
 
     this._storageAdapter.setBucketsStorage(this._buckets);
     this._storageAdapter.setArchivedStorage(this._archived);

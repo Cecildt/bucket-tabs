@@ -247,6 +247,39 @@ export class BucketSignals {
               lock.style.display = 'none';
             }
           }
+
+          // Set Tabs
+          const tabs = bucket.getTabs();
+          const tabsEl = bucketEL.querySelector('.bt-tabs-list');
+          if (tabsEl) {
+            tabsEl.innerHTML = '';
+
+            const tab_template = document.getElementById('tabItemTemplate');
+            if (tab_template) {
+              tabs.forEach((tab) => {
+                let newTab = tab_template.cloneNode(true);
+                if (newTab) {
+                  let tabEl = newTab as HTMLElement;
+
+                  if (!tabEl) {
+                    return
+                  }
+
+                  tabEl.removeAttribute('id');
+                  tabEl.setAttribute('id', tab.getTabID().toString());
+
+                  let link = tabEl.children[0] as HTMLLinkElement;
+
+                  if (link) {
+                    link.href = tab.getTabURL().toString();
+                    link.textContent = tab.getTabName().toString();
+                  }
+                  
+                  tabsEl.appendChild(tabEl);
+                }
+              });
+            }
+          }
         }
 
         bucketsFragment.appendChild(fragment);

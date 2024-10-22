@@ -1,6 +1,12 @@
 import { ulid } from 'ulid';
 import { StorageAdapter } from './storage';
 
+export enum BucketType {
+  Default = 'default',
+  Archived = 'archived',
+  Normal = 'normal'
+}
+
 export class BucketListDataModel {
   private _buckets: Array<BucketDataModel> = [];
   private _archived: Array<BucketDataModel> = [];
@@ -16,7 +22,7 @@ export class BucketListDataModel {
       this._buckets = buckets;
     } else {
       this._buckets.push(
-        new BucketDataModel(undefined, 'Default Bucket', 1, true)
+        new BucketDataModel(undefined, 'Default Bucket', 1, BucketType.Default)
       );
 
       this._storageAdapter.setBucketsStorage(this._buckets);
@@ -25,7 +31,7 @@ export class BucketListDataModel {
     if (archived.length > 0) {
       this._archived = archived;
     } else {
-      this._archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1));
+      this._archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1, BucketType.Archived));
       this._storageAdapter.setArchivedStorage(this._archived);
     }
   }
@@ -42,7 +48,7 @@ export class BucketListDataModel {
         undefined,
         'Default Bucket',
         1,
-        true
+        BucketType.Default
       );
       defaultBucket.addTab(
         new TabDataModel(1, 'Google', 'https://www.google.com', 1)
@@ -75,7 +81,8 @@ export class BucketListDataModel {
       let archivedBuckets = new BucketDataModel(
         undefined,
         'Archived Bucket',
-        1
+        1,
+        BucketType.Archived
       );
       archivedBuckets.addTab(
         new TabDataModel(1, 'GitHub', 'https://github.com', 1)
@@ -108,8 +115,8 @@ export class BucketListDataModel {
 
   removeAllBuckets(): void {
     let defaultBuckets = this._buckets.filter((bucket) => {
-      let defaultType = bucket.getDefaultType();
-      return defaultType === true;
+      let bucketType = bucket.getBucketType();
+      return bucketType === BucketType.Default;
     });
 
     this._buckets = defaultBuckets;
@@ -156,7 +163,7 @@ export class BucketDataModel {
   private BucketName: String = '';
   private Order: Number = -1;
   private BucketTabs: Array<TabDataModel> = [];
-  private DefaultType: Boolean = false;
+  private BucketType: BucketType = BucketType.Normal;
   private Starred: Boolean = false;
   private Locked: Boolean = false;
 
@@ -164,14 +171,14 @@ export class BucketDataModel {
     id: String = ulid(),
     name: String,
     order: Number,
-    defaultType?: Boolean,
+    bucketType?: BucketType,
     starred?: Boolean,
     locked?: Boolean
   ) {
     this.BucketID = id;
     this.BucketName = name;
     this.Order = order;
-    this.DefaultType = defaultType || false;
+    this.BucketType = bucketType || BucketType.Normal;
     this.Starred = starred || false;
     this.Locked = locked || false;
   }
@@ -209,8 +216,8 @@ export class BucketDataModel {
     return this.BucketName;
   }
 
-  getDefaultType(): Boolean {
-    return this.DefaultType;
+  getBucketType(): BucketType {
+    return this.BucketType;
   }
 
   getStarred(): Boolean {

@@ -1,0 +1,33 @@
+---
+import SearchBox from './SearchBox.astro';
+---
+
+<div class="navbar bg-base-100">
+  <div class="navbar-start">
+    <ul class="menu menu-horizontal px-1 mr-14">
+      <li>
+        <details>
+          <summary>Tabs Actions</summary>
+          <ul class="bt-actions-menu p-2 w-44 z-50">
+            <li>
+              <a class="bt-action-menu-item bt-action-restore-all-tabs"
+                >Restore all tabs</a>
+            </li>
+            <li>
+              <a class="bt-action-menu-item bt-action-delete-all-tabs"
+                >Delete all tabs</a>
+            </li>
+            <li>
+              <a class="bt-action-menu-item bt-action-archive-all-tabs"
+                >Archive all tabs</a>
+            </li>
+          </ul>
+        </details>
+      </li>
+    </ul>
+  </div>
+  <div class="navbar-center hidden lg:flex"></div>
+  <div class="navbar-end">
+    <SearchBox />
+  </div>
+</div>

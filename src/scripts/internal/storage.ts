@@ -1,13 +1,13 @@
 // Description: Logic for storing and retrieving data from local storage
 
-import { BucketDataModel, TabDataModel } from './bucket-data-model';
+import { BucketDataModel, BucketType, TabDataModel } from './bucket-data-model';
 
 interface BucketStorageDataModel {
   BucketID: String;
   BucketName: String;
   Order: Number;
   BucketTabs: Array<TabStorageDataModel>;
-  DefaultType: Boolean,
+  BucketType: BucketType,
   Starred: Boolean,
   Locked: Boolean
 }
@@ -47,7 +47,7 @@ export class StorageAdapter {
           bucket.BucketID,
           bucket.BucketName,
           bucket.Order,
-          bucket.DefaultType,
+          bucket.BucketType,
           bucket.Starred,
           bucket.Locked
         );
@@ -90,7 +90,7 @@ export class StorageAdapter {
         BucketID: bucket.getBucketID(),
         BucketName: bucket.getBucketName(),
         Order: bucket.getOrder(),
-        DefaultType: bucket.getDefaultType(),
+        BucketType: bucket.getBucketType(),
         BucketTabs: storedTabs,
         Starred: bucket.getStarred(),
         Locked: bucket.getLocked(),
@@ -113,7 +113,7 @@ export class StorageAdapter {
           bucket.BucketID,
           bucket.BucketName,
           bucket.Order,
-          bucket.DefaultType,
+          bucket.BucketType,
           bucket.Starred,
           bucket.Locked
         );
@@ -155,7 +155,7 @@ export class StorageAdapter {
         BucketID: bucket.getBucketID(),
         BucketName: bucket.getBucketName(),
         Order: bucket.getOrder(),
-        DefaultType: bucket.getDefaultType(),
+        BucketType: bucket.getBucketType(),
         BucketTabs: storageTabs,
         Starred: bucket.getStarred(),
         Locked: bucket.getLocked()

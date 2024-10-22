@@ -1,4 +1,4 @@
-import { BucketDataModel } from './bucket-data-model';
+import { BucketDataModel, BucketType } from './bucket-data-model';
 import { createSignal } from './signals';
 
 export enum BucketEvents {
@@ -254,6 +254,14 @@ export class BucketSignals {
               lock.style.display = '';
             } else {
               lock.style.display = 'none';
+            }
+
+            if (bucket.getBucketType() === BucketType.Default) {
+              lock.style.display = '';
+            }
+
+            if (bucket.getBucketType() === BucketType.Archived) {
+              lock.style.display = '';
             }
           }
 

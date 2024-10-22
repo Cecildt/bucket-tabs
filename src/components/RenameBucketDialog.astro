@@ -22,28 +22,32 @@
 </dialog>
 
 <script>
-  const renameBucketBtn = document.getElementById("bt-rename-bucket-btn");
+  import {
+    BucketEvents,
+    type RenameBucketType,
+  } from '../scripts/internal/bucket-signals';
+
+  const renameBucketBtn = document.getElementById('bt-rename-bucket-btn');
   if (renameBucketBtn) {
-    renameBucketBtn.addEventListener('click', ()=>{
+    renameBucketBtn.addEventListener('click', () => {
       console.log('Rename bucket button');
 
       const renameBucketDialog = document.getElementById('bt-rename-bucket');
-        const renameInput = renameBucketDialog?.querySelector("input");
-        if(renameInput){
-          const bucketName = renameInput.value;
-          console.log('Bucket name:', bucketName);
+      const renameInput = renameBucketDialog?.querySelector('input');
+      if (renameInput) {
+        const bucketName = renameInput.value;
+        const bucketID = window.globalBucketTabsState.getCurrentBucketID();
 
-          const bucketID = window.globalBucketTabsState.getCurrentBucketID();
+        let bucketRename: RenameBucketType = {
+          BucketID: bucketID,
+          BucketName: bucketName,
+        };
 
-          const bucketEl = document.getElementById(bucketID.toString());
-          if (bucketEl) {
-            const bucketNameElement = bucketEl.querySelector('.bt-bucket-name');
-            if(bucketNameElement) {
-              bucketNameElement.textContent = bucketName;
-            }
-          }          
-        }
-
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.RenameBucket,
+          bucketRename
+        );
+      }
     });
   }
 </script>

@@ -183,6 +183,10 @@ export class BucketDataModel {
   setLocked(value: Boolean): void {
     this.Locked = value;
   }
+
+  setBucketName(name: String): void {
+    this.BucketName = name;
+  }
 }
 
 export class TabDataModel {

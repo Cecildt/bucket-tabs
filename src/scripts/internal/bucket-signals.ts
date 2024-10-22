@@ -11,6 +11,12 @@ export enum BucketEvents {
   ArchiveBucket,
   LockBucket,
   StarBucket,
+  RenameBucket,
+}
+
+export interface RenameBucketType {
+  BucketID: String,
+  BucketName: String
 }
 
 export class BucketSignals {
@@ -23,6 +29,7 @@ export class BucketSignals {
   private _archiveBucketSignal = createSignal<String>();
   private _lockBucketSignal = createSignal<String>();
   private _starBucketSignal = createSignal<String>();
+  private _renameBucketSignal = createSignal<RenameBucketType>();
 
   constructor() {
     this.setupSignals();
@@ -56,6 +63,9 @@ export class BucketSignals {
         break;
       case BucketEvents.StarBucket:
         this._starBucketSignal(value);
+        break;
+      case BucketEvents.RenameBucket:
+        this._renameBucketSignal(value)
         break;
 
       default:
@@ -108,6 +118,11 @@ export class BucketSignals {
     this._starBucketSignal((bucketID) => {
       console.log('Signal: Star Bucket');
       this.starBucketViewData(bucketID);
+    });
+
+    this._renameBucketSignal((data) => {
+      console.log('Signal: Rename Bucket');
+      this.renameBucketViewData(data.BucketID, data.BucketName);
     });
   }
 
@@ -319,6 +334,25 @@ export class BucketSignals {
 
     if (bucket) {
       bucket.setStarred(!bucket.getStarred());
+      window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+    }
+
+    // View
+    const bucketListEl = document.getElementById('buckets-list');
+    if (bucketListEl) {
+      let buckets =
+        window.globalBucketTabsState.BucketListDataModel.getBuckets();
+      this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private renameBucketViewData(bucketID: String, name: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {    
+      bucket.setBucketName(name);
       window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
     }
 

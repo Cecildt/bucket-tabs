@@ -6,8 +6,7 @@ export class BucketListDataModel {
   private _archived: Array<BucketDataModel> = [];
   private _storageAdapter = new StorageAdapter();
 
-  constructor() {
-  }
+  constructor() {}
 
   async initDataSet(): Promise<void> {
     let buckets = await this._storageAdapter.getBucketsStorage();
@@ -31,33 +30,62 @@ export class BucketListDataModel {
     }
   }
 
-  initDemoDataSet(): void {
-    this._buckets = [];
+  async initDemoDataSet(): Promise<void> {
+    let buckets = await this._storageAdapter.getBucketsStorage();
+    let archived = await this._storageAdapter.getArchivedStorage();
 
-    let defaultBucket = new BucketDataModel(undefined, 'Default Bucket', 1, true);
-    defaultBucket.addTab(
-      new TabDataModel(1, 'Google', 'https://www.google.com', 1, 1)
-    );
-    defaultBucket.addTab(
-      new TabDataModel(2, 'YouTube', 'https://www.youtube.com', 1, 2)
-    );
-    defaultBucket.addTab(
-      new TabDataModel(3, 'Reddit', 'https://www.reddit.com', 1, 3)
-    );
+    if (buckets.length > 0) {
+      this._buckets = buckets;
+    } else {
+      // Default bucket
+      let defaultBucket = new BucketDataModel(
+        undefined,
+        'Default Bucket',
+        1,
+        true
+      );
+      defaultBucket.addTab(
+        new TabDataModel(1, 'Google', 'https://www.google.com', 1)
+      );
+      defaultBucket.addTab(
+        new TabDataModel(2, 'YouTube', 'https://www.youtube.com', 2)
+      );
+      defaultBucket.addTab(
+        new TabDataModel(3, 'Reddit', 'https://www.reddit.com', 3)
+      );
 
-    this._buckets.push(defaultBucket);
-    this._buckets.push(new BucketDataModel(undefined, 'Demo Bucket', 2));
+      this._buckets.push(defaultBucket);
 
-    this._archived = [];
-    let archivedBuckets = new BucketDataModel(undefined, 'Archived Bucket', 1);
-    archivedBuckets.addTab(
-      new TabDataModel(1, 'GitHub', 'https://github.com', 1, 1)
-    );
-    archivedBuckets.addTab(
-      new TabDataModel(2, 'StackOverflow', 'https://stackoverflow.com', 1, 2)
-    );
+      // Demo bucket
+      let demoBucket = new BucketDataModel(undefined, 'Demo Bucket', 2);
+      demoBucket.addTab(
+        new TabDataModel(1, 'Twitter', 'https://twitter.com', 1)
+      );
+      demoBucket.addTab(
+        new TabDataModel(2, 'Facebook', 'https://www.facebook.com', 2)
+      );
+      this._buckets.push(demoBucket);
+    }
 
-    this._archived.push(archivedBuckets);
+    if (archived.length > 0) {
+      this._archived = archived;
+    } else {
+      // Archived bucket
+      this._archived = [];
+      let archivedBuckets = new BucketDataModel(
+        undefined,
+        'Archived Bucket',
+        1
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(1, 'GitHub', 'https://github.com', 1)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(2, 'StackOverflow', 'https://stackoverflow.com', 2)
+      );
+
+      this._archived.push(archivedBuckets);
+    }
 
     this._storageAdapter.setBucketsStorage(this._buckets);
     this._storageAdapter.setArchivedStorage(this._archived);
@@ -149,7 +177,8 @@ export class BucketDataModel {
   }
 
   addTab(tab: TabDataModel): void {
-    tab.setOrder(this.BucketTabs.length + 1);
+    tab.setTabID(this.BucketTabs.length + 1);
+    tab.setOrder(this.BucketTabs.length + 1);    
     this.BucketTabs.push(tab);
   }
 
@@ -209,20 +238,17 @@ export class TabDataModel {
   private TabID: Number = -1;
   private TabName: String = '';
   private TabURL: String = '';
-  private TabBucketID: Number = -1;
   private Order: Number = -1;
 
   constructor(
     id: Number,
     name: String,
     url: String,
-    bucketID: Number,
     order: Number
   ) {
     this.TabID = id;
     this.TabName = name;
     this.TabURL = url;
-    this.TabBucketID = bucketID;
     this.Order = order;
   }
 
@@ -244,14 +270,6 @@ export class TabDataModel {
 
   getTabURL(): String {
     return this.TabURL;
-  }
-
-  getTabBucketID(): Number {
-    return this.TabBucketID;
-  }
-
-  setTabBucketID(id: Number): void {
-    this.TabBucketID = id;
   }
 
   setTabName(name: String): void {

@@ -16,7 +16,6 @@ interface TabStorageDataModel {
   TabID: Number;
   TabName: String;
   TabURL: String;
-  TabBucketID: Number;
   Order: Number;
 }
 
@@ -58,7 +57,6 @@ export class StorageAdapter {
             tab.TabID,
             tab.TabName,
             tab.TabURL,
-            tab.TabBucketID,
             tab.Order
           );
           newBucket.addTab(tabData);
@@ -82,7 +80,6 @@ export class StorageAdapter {
           TabID: tab.getTabID(),
           TabName: tab.getTabName(),
           TabURL: tab.getTabURL(),
-          TabBucketID: tab.getTabBucketID(),
           Order: tab.getOrder(),
         };
   
@@ -126,7 +123,6 @@ export class StorageAdapter {
             tab.TabID,
             tab.TabName,
             tab.TabURL,
-            tab.TabBucketID,
             tab.Order
           );
           newBucket.addTab(tabData);
@@ -149,7 +145,6 @@ export class StorageAdapter {
           TabID: tab.getTabID(),
           TabName: tab.getTabName(),
           TabURL: tab.getTabURL(),
-          TabBucketID: tab.getTabBucketID(),
           Order: tab.getOrder(),
         };
   

@@ -221,9 +221,18 @@ export class BucketSignals {
           bucketEL.removeAttribute('id');
           bucketEL.setAttribute('id', bucketID);
 
+          // Set Title
           const collapseTitle = bucketEL.querySelector('.bt-bucket-name');
           if (collapseTitle) {
             collapseTitle.textContent = bucket.getBucketName().toString();
+          }
+
+          // Set Tabs Count
+          const tabsCountEl = bucketEL.querySelector('.bt-tabs-count');
+
+          if (tabsCountEl) {
+            const tabsCount = bucket.getTabs().length;
+            tabsCountEl.textContent = tabsCount.toString();
           }
 
           // Set Star
@@ -338,6 +347,13 @@ export class BucketSignals {
       let buckets =
         window.globalBucketTabsState.BucketListDataModel.getBuckets();
       this.renderBucketsView(bucketListEl, buckets);
+    }
+
+    const archiveListEl = document.getElementById('buckets-list-archive');
+    if (archiveListEl) {
+      let archiveBuckets =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+      this.renderBucketsView(archiveListEl, archiveBuckets);
     }
   }
 

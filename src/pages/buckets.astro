@@ -4,6 +4,8 @@ import BucketsList from '../components/BucketsList.astro';
 import TabItemTemplate from '../components/TabItemTemplate.astro';
 import BucketGroupTemplate from '../components/BucketGroupTemplate.astro';
 import RenameBucketDialog from '../components/RenameBucketDialog.astro';
+import DefaultBucketTemplate from '../components/DefaultBucketTemplate.astro';
+import ArchivedBucketTemplate from '../components/ArchivedBucketTemplate.astro';
 ---
 
 <html lang="en">
@@ -25,6 +27,8 @@ import RenameBucketDialog from '../components/RenameBucketDialog.astro';
     </div>
     <div id="html-templates" hidden="true">
       <BucketGroupTemplate />
+      <DefaultBucketTemplate />
+      <ArchivedBucketTemplate />
       <TabItemTemplate />
     </div>
     <div id="html-dialogs">

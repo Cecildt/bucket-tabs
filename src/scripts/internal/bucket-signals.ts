@@ -203,15 +203,28 @@ export class BucketSignals {
     buckets: BucketDataModel[]
   ): void {
     const bucketsFragment = document.createDocumentFragment();
+    const bucket_template = document.getElementById('template-bucket');
+    const default_bucket_template = document.getElementById('template-default-bucket');
+    const archived_bucket_template = document.getElementById('template-archived-bucket');
 
     buckets.forEach((bucket: BucketDataModel) => {
-      const bucket_template = document.getElementById('template-bucket');
+      
 
       if (!bucket_template) return;
+      if (!default_bucket_template) return;
+      if (!archived_bucket_template) return;
 
       const fragment = document.createDocumentFragment();
       fragment.appendChild(document.createElement('li'));
+
       let newBucket = bucket_template.cloneNode(true);
+      if (bucket.getBucketType() === BucketType.Default) {
+        newBucket = default_bucket_template.cloneNode(true);
+      }
+      
+      if (bucket.getBucketType() === BucketType.Archived) {
+        newBucket = archived_bucket_template.cloneNode(true);
+      }
 
       if (newBucket) {
         if (fragment.firstChild) {

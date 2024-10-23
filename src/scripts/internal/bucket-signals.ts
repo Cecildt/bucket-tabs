@@ -1,5 +1,6 @@
 import { BucketDataModel, BucketType } from './bucket-data-model';
 import { createSignal } from './signals';
+import Fuse from 'fuse.js'
 
 export enum BucketEvents {
   LoadBuckets,
@@ -12,6 +13,7 @@ export enum BucketEvents {
   LockBucket,
   StarBucket,
   RenameBucket,
+  GlobalSearch
 }
 
 export interface RenameBucketType {
@@ -30,6 +32,7 @@ export class BucketSignals {
   private _lockBucketSignal = createSignal<String>();
   private _starBucketSignal = createSignal<String>();
   private _renameBucketSignal = createSignal<RenameBucketType>();
+  private _globalSearchSignal = createSignal<String>();
 
   constructor() {
     this.setupSignals();
@@ -67,6 +70,9 @@ export class BucketSignals {
       case BucketEvents.RenameBucket:
         this._renameBucketSignal(value);
         break;
+        case BucketEvents.GlobalSearch:
+          this._globalSearchSignal(value);
+          break;
 
       default:
         console.error('No bucket signal match!');
@@ -123,6 +129,11 @@ export class BucketSignals {
     this._renameBucketSignal((data) => {
       console.log('Signal: Rename Bucket');
       this.renameBucketViewData(data.BucketID, data.BucketName);
+    });
+
+    this._globalSearchSignal((data) => {
+      console.log('Signal: Global Search');
+      this.globalSearchViewData(data);
     });
   }
 
@@ -460,6 +471,97 @@ export class BucketSignals {
       let buckets =
         window.globalBucketTabsState.BucketListDataModel.getBuckets();
       this.renderBucketsView(bucketListEl, buckets);
+    }
+  }
+
+  private globalSearchViewData(searchText: String) {
+
+    const bucketsListEl = document.getElementById('buckets-list');
+    const bucketsArchivedListEl = document.getElementById('buckets-list-archive');
+    const searchResultEl = document.getElementById('global-search-result');
+
+    if (searchText === '') {
+      if (searchResultEl) {
+        searchResultEl.style.display = 'none';
+      }
+
+      if (bucketsListEl) {
+        bucketsListEl.style.display = '';
+        this.loadBucketsViewData();
+      }
+
+      if (bucketsArchivedListEl) {
+        bucketsArchivedListEl.style.display = '';
+        this.loadArchiveViewData();
+      }
+
+      return;
+    } else {
+      if (bucketsListEl) {
+        bucketsListEl.style.display = 'none';
+      }
+
+      if (bucketsArchivedListEl) {
+        bucketsArchivedListEl.style.display = 'none';
+      }
+    }
+
+    // Data
+    let buckets =
+      window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    let archivedBuckets =
+      window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+
+    let allBuckets = buckets.concat(archivedBuckets);
+
+    let options = {
+      keys: ['BucketName', 'Tabs.TabName', ],
+    };
+
+    let fuse = new Fuse(allBuckets, options);
+    let result = fuse.search(searchText.toString());
+    console.log(result);
+
+    let matchedBuckets: BucketDataModel[] = [];
+    result.forEach((bucket) => {
+      console.log(bucket.item);
+      matchedBuckets.push(bucket.item);
+    });
+
+    // View
+    
+    if (searchResultEl) {
+      searchResultEl.style.display = '';
+
+      const bucketSearchResultTemplateEl = document.getElementById('template-bucket-search-result');
+
+      if (!bucketSearchResultTemplateEl) return;
+
+      const searchResultFragment = document.createDocumentFragment();
+
+      matchedBuckets.forEach((bucket: BucketDataModel) => {
+        let bucketSearchResultEl = bucketSearchResultTemplateEl.cloneNode(true) as HTMLElement;
+
+        bucketSearchResultEl.removeAttribute('id');
+        bucketSearchResultEl.setAttribute('id', bucket.getBucketID().toString());
+        bucketSearchResultEl.querySelector('.menu-title')!.textContent = bucket.getBucketName().toString();
+
+        const tabs = bucket.getTabs();
+        tabs.forEach((tab) => {
+          const tabEl = document.createElement('li');
+          const linkEl = document.createElement('a');
+          linkEl.textContent = tab.getTabName().toString();
+          linkEl.href = tab.getTabURL().toString();
+          linkEl.target = '_blank';
+          tabEl.appendChild(linkEl);
+          
+          bucketSearchResultEl.querySelector('.bt-search-results-list')!.appendChild(tabEl);
+        });
+
+        searchResultFragment.appendChild(bucketSearchResultEl);
+      });
+
+      searchResultEl.replaceChildren(searchResultFragment);          
     }
   }
 }

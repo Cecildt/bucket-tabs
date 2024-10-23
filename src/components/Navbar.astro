@@ -40,6 +40,8 @@ import GlobalSearchBox from "./GlobalSearchBox.astro"
 </div>
 
 <script>
+import { BucketEvents } from "../scripts/internal/bucket-signals";
+
   console.log('Navbar inline script loaded');
 
   const opt_menu_items = document.querySelector('.bt-opt-menu-items');
@@ -55,6 +57,14 @@ import GlobalSearchBox from "./GlobalSearchBox.astro"
     help_menu_items.addEventListener('click', async (event) => {
       const targetElement = event.target as HTMLElement;
       targetElement.parentElement?.parentElement?.parentElement?.removeAttribute('open');
+    });
+  }
+
+  const search_box = document.getElementById('bt-global-search');
+  if (search_box) {
+    search_box.addEventListener('input', async (event) => {
+      const targetElement = event.target as HTMLInputElement;
+      window.globalBucketTabsState.BucketSignals.emit(BucketEvents.GlobalSearch, targetElement.value);
     });
   }
 

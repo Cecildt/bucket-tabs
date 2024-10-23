@@ -6,6 +6,8 @@ import BucketGroupTemplate from '../components/BucketGroupTemplate.astro';
 import RenameBucketDialog from '../components/RenameBucketDialog.astro';
 import DefaultBucketTemplate from '../components/DefaultBucketTemplate.astro';
 import ArchivedBucketTemplate from '../components/ArchivedBucketTemplate.astro';
+import GlobalSearchResult from '../components/GlobalSearchResult.astro';
+import BucketSearchResultTemplate from '../components/BucketSearchResultTemplate.astro';
 ---
 
 <html lang="en">
@@ -23,6 +25,7 @@ import ArchivedBucketTemplate from '../components/ArchivedBucketTemplate.astro';
       <div class="flex-auto w-64">
         <!-- Render the Main Content component -->
         <BucketsList />
+        <GlobalSearchResult />
       </div>
     </div>
     <div id="html-templates" hidden="true">
@@ -30,6 +33,7 @@ import ArchivedBucketTemplate from '../components/ArchivedBucketTemplate.astro';
       <DefaultBucketTemplate />
       <ArchivedBucketTemplate />
       <TabItemTemplate />
+      <BucketSearchResultTemplate />
     </div>
     <div id="html-dialogs">
       <RenameBucketDialog />

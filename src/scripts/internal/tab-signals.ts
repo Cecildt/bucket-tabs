@@ -111,6 +111,38 @@ export class TabSignals {
   }
 
   private restoreTabsViewData(bucketID: String) {
-    console.log('Restore tabs: ', bucketID);
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+
+      bucket.getTabs().forEach((tab) => {
+        console.log("TODO - Restore tab: ", tab.getTabURL());
+      });
+
+      bucket.removeTabs();
+      window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+
+      // View
+      window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadBuckets);
+    } else {
+      let archiveBucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+
+      if (archiveBucket) {
+        archiveBucket.getTabs().forEach((tab) => {
+          console.log("TODO - Restore tab: ", tab.getTabURL());
+        });
+        
+        archiveBucket.removeTabs();
+        window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(archiveBucket);
+
+        // View
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.LoadArchive
+        );
+      }
+    }
   }
 }

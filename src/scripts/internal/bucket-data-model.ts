@@ -196,6 +196,10 @@ export class BucketDataModel {
     }
   }
 
+  removeTabs(): void {
+    this.BucketTabs = [];
+  }
+
   getTabs(): Array<TabDataModel> {
     return this.BucketTabs;
   }

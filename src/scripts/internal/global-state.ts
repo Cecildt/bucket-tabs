@@ -1,5 +1,6 @@
 import { BucketListDataModel } from './bucket-data-model';
 import { BucketSignals } from './bucket-signals';
+import { TabSignals } from './tab-signals';
 
 export class GlobalBucketTabsState {
     private _currentBucketID: String = '';
@@ -7,6 +8,7 @@ export class GlobalBucketTabsState {
     
     public BucketListDataModel: BucketListDataModel = new BucketListDataModel();
     public BucketSignals = new BucketSignals();
+    public TabSignals = new TabSignals();
 
     
     constructor() {

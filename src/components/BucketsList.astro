@@ -8,6 +8,7 @@
 <script>
   import { BucketEvents } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
+import { TabEvents } from '../scripts/internal/tab-signals';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
   // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
@@ -124,6 +125,53 @@
           );
         }
       }
+
+      // bt-action-restore-all-tabs
+      if (targetElement.classList.contains('bt-action-restore-all-tabs')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.TabSignals.emit(
+            TabEvents.RestoreTabs,
+            bucketId
+          );
+        }
+      }
+
+
+      // bt-action-delete-all-tabs
+      if (targetElement.classList.contains('bt-action-delete-all-tabs')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.TabSignals.emit(
+            TabEvents.DeleteTabs,
+            bucketId
+          );
+        }
+      }
+
+
+
+      // bt-action-archive-all-tabs
+      if (targetElement.classList.contains('bt-action-archive-all-tabs')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.TabSignals.emit(
+            TabEvents.ArchiveTabs,
+            bucketId
+          );
+        }
+      }
+
+
     });
   }
 </script>

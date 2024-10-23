@@ -15,8 +15,8 @@ export enum BucketEvents {
 }
 
 export interface RenameBucketType {
-  BucketID: String,
-  BucketName: String
+  BucketID: String;
+  BucketName: String;
 }
 
 export class BucketSignals {
@@ -65,7 +65,7 @@ export class BucketSignals {
         this._starBucketSignal(value);
         break;
       case BucketEvents.RenameBucket:
-        this._renameBucketSignal(value)
+        this._renameBucketSignal(value);
         break;
 
       default:
@@ -204,12 +204,40 @@ export class BucketSignals {
   ): void {
     const bucketsFragment = document.createDocumentFragment();
     const bucket_template = document.getElementById('template-bucket');
-    const default_bucket_template = document.getElementById('template-default-bucket');
-    const archived_bucket_template = document.getElementById('template-archived-bucket');
+    const default_bucket_template = document.getElementById(
+      'template-default-bucket'
+    );
+    const archived_bucket_template = document.getElementById(
+      'template-archived-bucket'
+    );
 
-    buckets.forEach((bucket: BucketDataModel) => {
-      
+    let star_buckets = buckets.filter((bucket) => {
+      return bucket.getStarred();
+    });
 
+    let unstar_buckets = buckets.filter((bucket) => {
+      return !bucket.getStarred();
+    });
+
+    star_buckets.sort((a, b) => {
+      if (a.getOrder() > b.getOrder()) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+
+    unstar_buckets.sort((a, b) => {
+      if (a.getOrder() > b.getOrder()) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+
+    const sorted_buckets = star_buckets.concat(unstar_buckets);
+
+    sorted_buckets.forEach((bucket: BucketDataModel) => {
       if (!bucket_template) return;
       if (!default_bucket_template) return;
       if (!archived_bucket_template) return;
@@ -221,7 +249,7 @@ export class BucketSignals {
       if (bucket.getBucketType() === BucketType.Default) {
         newBucket = default_bucket_template.cloneNode(true);
       }
-      
+
       if (bucket.getBucketType() === BucketType.Archived) {
         newBucket = archived_bucket_template.cloneNode(true);
       }
@@ -292,7 +320,7 @@ export class BucketSignals {
                   let tabEl = newTab as HTMLElement;
 
                   if (!tabEl) {
-                    return
+                    return;
                   }
 
                   tabEl.removeAttribute('id');
@@ -304,7 +332,7 @@ export class BucketSignals {
                     link.href = tab.getTabURL().toString();
                     link.textContent = tab.getTabName().toString();
                   }
-                  
+
                   tabsEl.appendChild(tabEl);
                 }
               });
@@ -421,7 +449,7 @@ export class BucketSignals {
     let bucket =
       window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
 
-    if (bucket) {    
+    if (bucket) {
       bucket.setBucketName(name);
       window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
     }

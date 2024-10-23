@@ -22,7 +22,7 @@ export class BucketListDataModel {
       this._buckets = buckets;
     } else {
       this._buckets.push(
-        new BucketDataModel(undefined, 'Default Bucket', 1, BucketType.Default)
+        new BucketDataModel(undefined, 'Default Bucket', 1, BucketType.Default, false, true)
       );
 
       this._storageAdapter.setBucketsStorage(this._buckets);
@@ -31,7 +31,7 @@ export class BucketListDataModel {
     if (archived.length > 0) {
       this._archived = archived;
     } else {
-      this._archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1, BucketType.Archived));
+      this._archived.push(new BucketDataModel(undefined, 'Archived Bucket', 1, BucketType.Archived, false, true));
       this._storageAdapter.setArchivedStorage(this._archived);
     }
   }
@@ -48,7 +48,9 @@ export class BucketListDataModel {
         undefined,
         'Default Bucket',
         1,
-        BucketType.Default
+        BucketType.Default,
+        false,
+        true
       );
       defaultBucket.addTab(
         new TabDataModel(1, 'Google', 'https://www.google.com', 1)
@@ -82,7 +84,9 @@ export class BucketListDataModel {
         undefined,
         'Archived Bucket',
         1,
-        BucketType.Archived
+        BucketType.Archived,
+        false,
+        true
       );
       archivedBuckets.addTab(
         new TabDataModel(1, 'GitHub', 'https://github.com', 1)

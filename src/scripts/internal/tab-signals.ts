@@ -52,13 +52,10 @@ export class TabSignals {
       console.log('Signal: Restore Tabs');
       this.restoreTabsViewData(bucketID);
     });
-
   }
 
   // Signals functions
   private archiveTabsViewData(bucketID: String) {
-    console.log('Archiving tabs: ', bucketID);
-
     // Data
     let bucket =
       window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
@@ -87,7 +84,30 @@ export class TabSignals {
   }
 
   private deleteTabsViewData(bucketID: String) {
-    console.log('Delete tabs: ', bucketID);
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      bucket.removeTabs();
+      window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+
+      // View
+      window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadBuckets);
+    } else {
+      let archiveBucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+
+      if (archiveBucket) {
+        archiveBucket.removeTabs();
+        window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(archiveBucket);
+
+        // View
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.LoadArchive
+        );
+      }
+    }
   }
 
   private restoreTabsViewData(bucketID: String) {

@@ -1,6 +1,6 @@
 import { BucketDataModel, BucketType } from './bucket-data-model';
 import { createSignal } from './signals';
-import Fuse from 'fuse.js'
+import Fuse from 'fuse.js';
 
 export enum BucketEvents {
   LoadBuckets,
@@ -13,10 +13,18 @@ export enum BucketEvents {
   LockBucket,
   StarBucket,
   RenameBucket,
-  GlobalSearch
+  GlobalSearch,
 }
 
 export interface RenameBucketType {
+  BucketID: String;
+  BucketName: String;
+}
+
+interface TabSearchItem {
+  TabID: Number;
+  TabName: String;
+  TabURL: String;
   BucketID: String;
   BucketName: String;
 }
@@ -70,9 +78,9 @@ export class BucketSignals {
       case BucketEvents.RenameBucket:
         this._renameBucketSignal(value);
         break;
-        case BucketEvents.GlobalSearch:
-          this._globalSearchSignal(value);
-          break;
+      case BucketEvents.GlobalSearch:
+        this._globalSearchSignal(value);
+        break;
 
       default:
         console.error('No bucket signal match!');
@@ -475,9 +483,10 @@ export class BucketSignals {
   }
 
   private globalSearchViewData(searchText: String) {
-
     const bucketsListEl = document.getElementById('buckets-list');
-    const bucketsArchivedListEl = document.getElementById('buckets-list-archive');
+    const bucketsArchivedListEl = document.getElementById(
+      'buckets-list-archive'
+    );
     const searchResultEl = document.getElementById('global-search-result');
 
     if (searchText === '') {
@@ -507,61 +516,93 @@ export class BucketSignals {
     }
 
     // Data
-    let buckets =
-      window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
     let archivedBuckets =
       window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
 
     let allBuckets = buckets.concat(archivedBuckets);
 
+    let searchTabs: TabSearchItem[] = [];
+
+    allBuckets.forEach((bucket) => {
+      let tabs = bucket.getTabs();
+      tabs.forEach((tab) => {
+        searchTabs.push({
+          TabID: tab.getTabID(),
+          TabName: tab.getTabName(),
+          TabURL: tab.getTabURL(),
+          BucketID: bucket.getBucketID(),
+          BucketName: bucket.getBucketName(),
+        });
+      });
+    });
+
     let options = {
-      keys: ['BucketName', 'Tabs.TabName', ],
+      keys: ['TabName', 'TabURL'],
+      isCaseSensitive: false,
+      includeScore: true,
+      minMatchCharLength: 2,
+      ignoreLocation: true,
+      findAllMatches: true,
+      threshold: 0,
     };
 
-    let fuse = new Fuse(allBuckets, options);
+    let fuse = new Fuse(searchTabs, options);
     let result = fuse.search(searchText.toString());
     console.log(result);
 
-    let matchedBuckets: BucketDataModel[] = [];
+    let matchedTabs: TabSearchItem[] = [];
     result.forEach((bucket) => {
-      console.log(bucket.item);
-      matchedBuckets.push(bucket.item);
+      matchedTabs.push(bucket.item);
+    });
+
+    matchedTabs.sort((a, b) => {
+      if (a.BucketName > b.BucketName) {
+        return 1;
+      } else {
+        return -1;
+      }
     });
 
     // View
-    
     if (searchResultEl) {
       searchResultEl.style.display = '';
 
-      const bucketSearchResultTemplateEl = document.getElementById('template-bucket-search-result');
+      const bucketSearchResultTemplateEl = document.getElementById(
+        'template-bucket-search-result'
+      );
 
       if (!bucketSearchResultTemplateEl) return;
 
       const searchResultFragment = document.createDocumentFragment();
 
-      matchedBuckets.forEach((bucket: BucketDataModel) => {
-        let bucketSearchResultEl = bucketSearchResultTemplateEl.cloneNode(true) as HTMLElement;
+      matchedTabs.forEach((matchedTab: TabSearchItem) => {
+        let bucketSearchResultEl = bucketSearchResultTemplateEl.cloneNode(
+          true
+        ) as HTMLElement;
 
         bucketSearchResultEl.removeAttribute('id');
-        bucketSearchResultEl.setAttribute('id', bucket.getBucketID().toString());
-        bucketSearchResultEl.querySelector('.menu-title')!.textContent = bucket.getBucketName().toString();
+        bucketSearchResultEl.setAttribute('id', matchedTab.BucketID.toString());
+        bucketSearchResultEl.querySelector('.menu-title')!.textContent =
+          matchedTab.BucketName.toString();
 
-        const tabs = bucket.getTabs();
-        tabs.forEach((tab) => {
-          const tabEl = document.createElement('li');
-          const linkEl = document.createElement('a');
-          linkEl.textContent = tab.getTabName().toString();
-          linkEl.href = tab.getTabURL().toString();
-          linkEl.target = '_blank';
-          tabEl.appendChild(linkEl);
-          
-          bucketSearchResultEl.querySelector('.bt-search-results-list')!.appendChild(tabEl);
-        });
+        const tabEl = document.createElement('li');
+        const linkEl = document.createElement('a');
+        linkEl.id = matchedTab.TabID.toString();
+        linkEl.textContent = matchedTab.TabName.toString();
+        linkEl.href = matchedTab.TabURL.toString();
+        linkEl.target = '_blank';
+        tabEl.appendChild(linkEl);
+
+        bucketSearchResultEl
+          .querySelector('.bt-search-results-list')!
+          .appendChild(tabEl);
 
         searchResultFragment.appendChild(bucketSearchResultEl);
       });
 
-      searchResultEl.replaceChildren(searchResultFragment);          
+      let menuEl = searchResultEl.querySelector('.menu')!;
+      menuEl.replaceChildren(searchResultFragment);
     }
   }
 }

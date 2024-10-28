@@ -155,8 +155,6 @@ import { TabEvents } from '../scripts/internal/tab-signals';
         }
       }
 
-
-
       // bt-action-archive-all-tabs
       if (targetElement.classList.contains('bt-action-archive-all-tabs')) {
         const bucketGroup = targetElement.closest('.bt-bucket-group');
@@ -171,6 +169,10 @@ import { TabEvents } from '../scripts/internal/tab-signals';
         }
       }
 
+      // menu-dropdown-toggle
+      if (targetElement.classList.contains('menu-dropdown-toggle')) {
+        targetElement.parentElement?.querySelector('ul.menu-dropdown')?.classList.toggle('menu-dropdown-show');
+      }
 
     });
   }

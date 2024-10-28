@@ -345,11 +345,12 @@ export class BucketSignals {
                   tabEl.removeAttribute('id');
                   tabEl.setAttribute('id', tab.getTabID().toString());
 
-                  let link = tabEl.children[0] as HTMLLinkElement;
+                  let link = tabEl.querySelector('a.tab-link') as HTMLLinkElement;
 
                   if (link) {
                     link.href = tab.getTabURL().toString();
                     link.textContent = tab.getTabName().toString();
+                    link.title = tab.getTabURL().toString();
                   }
 
                   tabsEl.appendChild(tabEl);

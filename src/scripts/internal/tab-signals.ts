@@ -2,18 +2,28 @@ import { BucketDataModel, BucketType } from './bucket-data-model';
 import { BucketEvents } from './bucket-signals';
 import { createSignal } from './signals';
 
+export interface CurrentTabInfo{
+  BucketID: String;
+  TabID: String;
+}
+
 export enum TabEvents {
   AddTab,
-  DeleteTab,
+  DeleteTab,  
   DeleteTabs,
   ArchiveTabs,
+  ArchiveTab,
   RestoreTabs,
+  OpenWindowTab,
 }
 
 export class TabSignals {
   private _archiveTabsSignal = createSignal<String>();
   private _deleteTabsSignal = createSignal<String>();
   private _restoreTabsSignal = createSignal<String>();
+  private _deleteTabSignal = createSignal<CurrentTabInfo>();
+  private _archiveTabSignal = createSignal<CurrentTabInfo>();
+  private _openWindowTabSignal = createSignal<CurrentTabInfo>();
 
   constructor() {
     this.setupSignals();
@@ -29,6 +39,15 @@ export class TabSignals {
         break;
       case TabEvents.RestoreTabs:
         this._restoreTabsSignal(value);
+        break;
+      case TabEvents.DeleteTab:
+        this._deleteTabSignal(value);
+        break;
+      case TabEvents.ArchiveTab:
+        this._archiveTabSignal(value);
+        break;
+      case TabEvents.OpenWindowTab:
+        this._openWindowTabSignal(value);
         break;
 
       default:
@@ -51,6 +70,21 @@ export class TabSignals {
     this._restoreTabsSignal((bucketID) => {
       console.log('Signal: Restore Tabs');
       this.restoreTabsViewData(bucketID);
+    });
+
+    this._archiveTabSignal((currentTabInfo) => {
+      console.log('Signal: Archive Tab');
+      this.archiveTab(currentTabInfo);
+    });
+
+    this._deleteTabSignal((currentTabInfo) => {
+      console.log('Signal: Delete Tab');
+      this.deleteTab(currentTabInfo);
+    });
+
+    this._openWindowTabSignal((currentTabInfo) => {
+      console.log('Signal: Open New Window Tab');
+      this.openWindowTab(currentTabInfo);
     });
   }
 
@@ -154,4 +188,52 @@ export class TabSignals {
       }
     }
   }
+
+  private deleteTab(currentTabInfo: CurrentTabInfo){
+    if(!currentTabInfo){
+      return;
+    }
+
+    if (currentTabInfo.BucketID === '') {
+      return;
+    }
+
+    if (currentTabInfo.TabID === '') {
+      return;
+    }
+
+
+  }
+
+  private archiveTab(currentTabInfo: CurrentTabInfo){
+    if(!currentTabInfo){
+      return;
+    }
+
+    if (currentTabInfo.BucketID === '') {
+      return;
+    }
+
+    if (currentTabInfo.TabID === '') {
+      return;
+    }
+
+  }
+
+  private openWindowTab(currentTabInfo: CurrentTabInfo){
+    if(!currentTabInfo){
+      return;
+    }
+
+    if (currentTabInfo.BucketID === '') {
+      return;
+    }
+
+    if (currentTabInfo.TabID === '') {
+      return;
+    }
+    
+  }
+
+
 }

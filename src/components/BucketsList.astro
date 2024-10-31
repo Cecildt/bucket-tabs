@@ -8,7 +8,7 @@
 <script>
   import { BucketEvents } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
-  import { TabEvents } from '../scripts/internal/tab-signals';
+  import { TabEvents, type CurrentTabInfo } from '../scripts/internal/tab-signals';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
   // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
@@ -191,19 +191,77 @@
 
       // bt-tab-item-menu-action-archive
       if (targetElement.classList.contains('bt-tab-item-menu-action-archive')) {
-        console.log('Archive tab');
+
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketID = '';
+
+        if (bucketGroup) {
+          bucketID = bucketGroup.id;
+        }
+
+        const tabItem = targetElement.closest('.bt-tab-item');
+        let tabID = '';
+
+        if (tabItem) {
+          tabID = tabItem.id;
+        }
+
+        const currentTabInfo: CurrentTabInfo = {
+          BucketID: bucketID,
+          TabID: tabID
+        }
+
+        window.globalBucketTabsState.TabSignals.emit(TabEvents.ArchiveTab, currentTabInfo);
       }
 
 
       // bt-tab-item-menu-action-delete
       if (targetElement.classList.contains('bt-tab-item-menu-action-delete')) {
-        console.log('Delete Tab');
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketID = '';
+
+        if (bucketGroup) {
+          bucketID = bucketGroup.id;
+        }
+
+        const tabItem = targetElement.closest('.bt-tab-item');
+        let tabID = '';
+
+        if (tabItem) {
+          tabID = tabItem.id;
+        }
+
+        const currentTabInfo: CurrentTabInfo = {
+          BucketID: bucketID,
+          TabID: tabID
+        }
+
+        window.globalBucketTabsState.TabSignals.emit(TabEvents.DeleteTab, currentTabInfo);
       }
 
 
       // bt-tab-item-menu-action-window
       if (targetElement.classList.contains('bt-tab-item-menu-action-window')) {
-        console.log('New window tab');
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketID = '';
+
+        if (bucketGroup) {
+          bucketID = bucketGroup.id;
+        }
+
+        const tabItem = targetElement.closest('.bt-tab-item');
+        let tabID = '';
+
+        if (tabItem) {
+          tabID = tabItem.id;
+        }
+
+        const currentTabInfo: CurrentTabInfo = {
+          BucketID: bucketID,
+          TabID: tabID
+        }
+
+        window.globalBucketTabsState.TabSignals.emit(TabEvents.OpenWindowTab, currentTabInfo);
       }
 
 

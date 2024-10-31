@@ -8,7 +8,7 @@
 <script>
   import { BucketEvents } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
-import { TabEvents } from '../scripts/internal/tab-signals';
+  import { TabEvents } from '../scripts/internal/tab-signals';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
   // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
@@ -140,7 +140,6 @@ import { TabEvents } from '../scripts/internal/tab-signals';
         }
       }
 
-
       // bt-action-delete-all-tabs
       if (targetElement.classList.contains('bt-action-delete-all-tabs')) {
         const bucketGroup = targetElement.closest('.bt-bucket-group');
@@ -171,8 +170,42 @@ import { TabEvents } from '../scripts/internal/tab-signals';
 
       // menu-dropdown-toggle
       if (targetElement.classList.contains('menu-dropdown-toggle')) {
-        targetElement.parentElement?.querySelector('ul.menu-dropdown')?.classList.toggle('menu-dropdown-show');
+        targetElement.parentElement
+          ?.querySelector('ul.menu-dropdown')
+          ?.classList.toggle('menu-dropdown-show');
       }
+
+      if (targetElement.classList.contains('bt-tab-item-menu')) {
+        let children = targetElement.querySelector('span.badge-neutral');
+        if (children) {
+          children.classList.remove('badge-neutral');
+          children.classList.add('badge-primary');
+        } else {
+          children = targetElement.querySelector('span.badge-primary');
+          if (children) {
+            children.classList.remove('badge-primary');
+            children.classList.add('badge-neutral');
+          }
+        }
+      }
+
+      // bt-tab-item-menu-action-archive
+      if (targetElement.classList.contains('bt-tab-item-menu-action-archive')) {
+        console.log('Archive tab');
+      }
+
+
+      // bt-tab-item-menu-action-delete
+      if (targetElement.classList.contains('bt-tab-item-menu-action-delete')) {
+        console.log('Delete Tab');
+      }
+
+
+      // bt-tab-item-menu-action-window
+      if (targetElement.classList.contains('bt-tab-item-menu-action-window')) {
+        console.log('New window tab');
+      }
+
 
     });
   }

@@ -2,14 +2,14 @@ import { BucketDataModel, BucketType } from './bucket-data-model';
 import { BucketEvents } from './bucket-signals';
 import { createSignal } from './signals';
 
-export interface CurrentTabInfo{
+export interface CurrentTabInfo {
   BucketID: String;
   TabID: String;
 }
 
 export enum TabEvents {
   AddTab,
-  DeleteTab,  
+  DeleteTab,
   DeleteTabs,
   ArchiveTabs,
   ArchiveTab,
@@ -189,8 +189,8 @@ export class TabSignals {
     }
   }
 
-  private deleteTab(currentTabInfo: CurrentTabInfo){
-    if(!currentTabInfo){
+  private deleteTab(currentTabInfo: CurrentTabInfo) {
+    if (!currentTabInfo) {
       return;
     }
 
@@ -202,11 +202,29 @@ export class TabSignals {
       return;
     }
 
+    // Data
+    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+      currentTabInfo.BucketID
+    );
 
+    if (bucket) {
+      let currentTab = bucket
+        .getTabs()
+        .find((tab) => tab.getTabID() === currentTabInfo.TabID);
+
+      if (currentTab) {
+        bucket.removeTab(currentTab);
+        window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+        // View
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.LoadBuckets
+        );
+      }
+    }
   }
 
-  private archiveTab(currentTabInfo: CurrentTabInfo){
-    if(!currentTabInfo){
+  private archiveTab(currentTabInfo: CurrentTabInfo) {
+    if (!currentTabInfo) {
       return;
     }
 
@@ -218,10 +236,41 @@ export class TabSignals {
       return;
     }
 
+    // Data
+    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+      currentTabInfo.BucketID
+    );
+
+    if (bucket) {
+      let currentTab = bucket
+        .getTabs()
+        .find((tab) => tab.getTabID() === currentTabInfo.TabID);
+
+      if (currentTab) {
+        let archiveBucket =
+          window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+
+        if (archiveBucket) {
+          archiveBucket.addTab(currentTab);
+          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(archiveBucket);
+          
+          bucket.removeTab(currentTab);
+          window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+
+          // View
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LoadBuckets
+          );
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LoadArchive
+          );
+        }
+      }
+    }
   }
 
-  private openWindowTab(currentTabInfo: CurrentTabInfo){
-    if(!currentTabInfo){
+  private openWindowTab(currentTabInfo: CurrentTabInfo) {
+    if (!currentTabInfo) {
       return;
     }
 
@@ -232,8 +281,23 @@ export class TabSignals {
     if (currentTabInfo.TabID === '') {
       return;
     }
-    
+
+    // Data
+    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+      currentTabInfo.BucketID
+    );
+
+    if (bucket) {
+      let currentTab = bucket
+        .getTabs()
+        .find((tab) => tab.getTabID() === currentTabInfo.TabID);
+
+      if (currentTab) {
+        // TODO: Fix to use Chrome API to open new window with tab
+        window.open(currentTab.getTabURL().toString(), '_blank');
+      }
+    }
+
+
   }
-
-
 }

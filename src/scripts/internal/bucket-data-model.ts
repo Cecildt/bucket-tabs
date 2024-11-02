@@ -275,8 +275,8 @@ export class TabDataModel {
     return this.Order;
   }
 
-  getTabID(): Number {
-    return this.TabID;
+  getTabID(): String {
+    return this.TabID.toString();
   }
 
   getTabName(): String {

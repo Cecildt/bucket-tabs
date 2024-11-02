@@ -140,6 +140,20 @@
         }
       }
 
+      // bt-action-restore-all-tabs-grouped
+      if (targetElement.classList.contains('bt-action-restore-all-tabs-grouped')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+
+        if (bucketGroup) {
+          const bucketId = bucketGroup.id;
+          window.globalBucketTabsState.setCurrentBucketID(bucketId);
+          window.globalBucketTabsState.TabSignals.emit(
+            TabEvents.RestoreTabsGrouped,
+            bucketId
+          );
+        }
+      }
+
       // bt-action-delete-all-tabs
       if (targetElement.classList.contains('bt-action-delete-all-tabs')) {
         const bucketGroup = targetElement.closest('.bt-bucket-group');

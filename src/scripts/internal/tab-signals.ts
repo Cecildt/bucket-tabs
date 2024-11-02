@@ -14,6 +14,7 @@ export enum TabEvents {
   ArchiveTabs,
   ArchiveTab,
   RestoreTabs,
+  RestoreTabsGrouped,
   OpenWindowTab,
 }
 
@@ -21,6 +22,7 @@ export class TabSignals {
   private _archiveTabsSignal = createSignal<String>();
   private _deleteTabsSignal = createSignal<String>();
   private _restoreTabsSignal = createSignal<String>();
+  private _restoreTabsGroupedSignal = createSignal<String>();
   private _deleteTabSignal = createSignal<CurrentTabInfo>();
   private _archiveTabSignal = createSignal<CurrentTabInfo>();
   private _openWindowTabSignal = createSignal<CurrentTabInfo>();
@@ -39,6 +41,9 @@ export class TabSignals {
         break;
       case TabEvents.RestoreTabs:
         this._restoreTabsSignal(value);
+        break;
+      case TabEvents.RestoreTabsGrouped:
+        this._restoreTabsGroupedSignal(value);
         break;
       case TabEvents.DeleteTab:
         this._deleteTabSignal(value);
@@ -70,6 +75,11 @@ export class TabSignals {
     this._restoreTabsSignal((bucketID) => {
       console.log('Signal: Restore Tabs');
       this.restoreTabsViewData(bucketID);
+    });
+
+    this._restoreTabsGroupedSignal((bucketID) => {
+      console.log('Signal: Restore Tabs Grouped');
+      this.restoreTabsGroupedViewData(bucketID);
     });
 
     this._archiveTabSignal((currentTabInfo) => {
@@ -171,6 +181,51 @@ export class TabSignals {
 
       if (archiveBucket) {
         archiveBucket.getTabs().forEach((tab) => {
+          window.open(tab.getTabURL().toString(), '_blank');
+        });
+
+        if (!archiveBucket.getLocked()) {
+          archiveBucket.removeTabs();
+          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+            archiveBucket
+          );
+
+          // View
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LoadArchive
+          );
+        }
+      }
+    }
+  }
+
+  private restoreTabsGroupedViewData(bucketID: String) {
+    // Data
+    let bucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+    if (bucket) {
+      bucket.getTabs().forEach((tab) => {
+        // TODO: Fix to use Chome API to create browser group and restore tabs
+        window.open(tab.getTabURL().toString(), '_blank');
+      });
+
+      if (!bucket.getLocked()) {
+        bucket.removeTabs();
+        window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+
+        // View
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.LoadBuckets
+        );
+      }
+    } else {
+      let archiveBucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+
+      if (archiveBucket) {
+        archiveBucket.getTabs().forEach((tab) => {
+          // TODO: Fix to use Chome API to create browser group and restore tabs
           window.open(tab.getTabURL().toString(), '_blank');
         });
 

@@ -94,6 +94,37 @@ export class BucketListDataModel {
       archivedBuckets.addTab(
         new TabDataModel(2, 'StackOverflow', 'https://stackoverflow.com', 2)
       );
+      archivedBuckets.addTab(
+        new TabDataModel(3, 'StackOverflow', 'https://stackoverflow.com', 3)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(4, 'StackOverflow', 'https://stackoverflow.com', 4)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(5, 'StackOverflow', 'https://stackoverflow.com', 5)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(6, 'StackOverflow', 'https://stackoverflow.com', 6)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(7, 'StackOverflow', 'https://stackoverflow.com', 7)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(8, 'StackOverflow', 'https://stackoverflow.com', 8)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(9, 'StackOverflow', 'https://stackoverflow.com', 9)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(10, 'StackOverflow', 'https://stackoverflow.com', 10)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(11, 'StackOverflow', 'https://stackoverflow.com', 11)
+      );
+      archivedBuckets.addTab(
+        new TabDataModel(12, 'StackOverflow', 'https://stackoverflow.com', 12)
+      );
+      
 
       this._archived.push(archivedBuckets);
     }

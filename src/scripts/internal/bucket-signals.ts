@@ -331,7 +331,12 @@ export class BucketSignals {
           if (tabsEl) {
             tabsEl.innerHTML = '';
 
-            const tab_template = document.getElementById('tabItemTemplate');
+            let tab_template = document.getElementById('tabItemTemplate');
+
+            if (bucket.getBucketType() === BucketType.Archived) {
+              tab_template = document.getElementById('archivedTabItemTemplate');
+            }
+
             if (tab_template) {
               tabs.forEach((tab) => {
                 let newTab = tab_template.cloneNode(true);

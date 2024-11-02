@@ -153,7 +153,7 @@ export class TabSignals {
 
     if (bucket) {
       bucket.getTabs().forEach((tab) => {
-        console.log('TODO - Restore tab: ', tab.getTabURL());
+        window.open(tab.getTabURL().toString(), '_blank');
       });
 
       if (!bucket.getLocked()) {
@@ -171,7 +171,7 @@ export class TabSignals {
 
       if (archiveBucket) {
         archiveBucket.getTabs().forEach((tab) => {
-          console.log('TODO - Restore tab: ', tab.getTabURL());
+          window.open(tab.getTabURL().toString(), '_blank');
         });
 
         if (!archiveBucket.getLocked()) {

@@ -53,13 +53,13 @@ export class BucketListDataModel {
         true
       );
       defaultBucket.addTab(
-        new TabDataModel(1, 'Google', 'https://www.google.com', 1)
+        new TabDataModel('Google', 'https://www.google.com', 1)
       );
       defaultBucket.addTab(
-        new TabDataModel(2, 'YouTube', 'https://www.youtube.com', 2)
+        new TabDataModel('YouTube', 'https://www.youtube.com', 2)
       );
       defaultBucket.addTab(
-        new TabDataModel(3, 'Reddit', 'https://www.reddit.com', 3)
+        new TabDataModel('Reddit', 'https://www.reddit.com', 3)
       );
 
       this._buckets.push(defaultBucket);
@@ -67,10 +67,10 @@ export class BucketListDataModel {
       // Demo bucket
       let demoBucket = new BucketDataModel(undefined, 'Demo Bucket', 2);
       demoBucket.addTab(
-        new TabDataModel(1, 'Twitter', 'https://twitter.com', 1)
+        new TabDataModel('Twitter', 'https://twitter.com', 1)
       );
       demoBucket.addTab(
-        new TabDataModel(2, 'Facebook', 'https://www.facebook.com', 2)
+        new TabDataModel('Facebook', 'https://www.facebook.com', 2)
       );
       this._buckets.push(demoBucket);
     }
@@ -89,40 +89,40 @@ export class BucketListDataModel {
         true
       );
       archivedBuckets.addTab(
-        new TabDataModel(1, 'GitHub', 'https://github.com', 1)
+        new TabDataModel('GitHub', 'https://github.com', 1)
       );
       archivedBuckets.addTab(
-        new TabDataModel(2, 'StackOverflow', 'https://stackoverflow.com', 2)
+        new TabDataModel('StackOverflow', 'https://stackoverflow.com', 2)
       );
       archivedBuckets.addTab(
-        new TabDataModel(3, 'StackOverflow', 'https://stackoverflow.com', 3)
+        new TabDataModel('StackOverflow 2', 'https://stackoverflow.com', 3)
       );
       archivedBuckets.addTab(
-        new TabDataModel(4, 'StackOverflow', 'https://stackoverflow.com', 4)
+        new TabDataModel('StackOverflow 3', 'https://stackoverflow.com', 4)
       );
       archivedBuckets.addTab(
-        new TabDataModel(5, 'StackOverflow', 'https://stackoverflow.com', 5)
+        new TabDataModel('StackOverflow 4', 'https://stackoverflow.com', 5)
       );
       archivedBuckets.addTab(
-        new TabDataModel(6, 'StackOverflow', 'https://stackoverflow.com', 6)
+        new TabDataModel('StackOverflow 5', 'https://stackoverflow.com', 6)
       );
       archivedBuckets.addTab(
-        new TabDataModel(7, 'StackOverflow', 'https://stackoverflow.com', 7)
+        new TabDataModel('StackOverflow 6', 'https://stackoverflow.com', 7)
       );
       archivedBuckets.addTab(
-        new TabDataModel(8, 'StackOverflow', 'https://stackoverflow.com', 8)
+        new TabDataModel('StackOverflow 7', 'https://stackoverflow.com', 8)
       );
       archivedBuckets.addTab(
-        new TabDataModel(9, 'StackOverflow', 'https://stackoverflow.com', 9)
+        new TabDataModel('StackOverflow 8', 'https://stackoverflow.com', 9)
       );
       archivedBuckets.addTab(
-        new TabDataModel(10, 'StackOverflow', 'https://stackoverflow.com', 10)
+        new TabDataModel('StackOverflow 9', 'https://stackoverflow.com', 10)
       );
       archivedBuckets.addTab(
-        new TabDataModel(11, 'StackOverflow', 'https://stackoverflow.com', 11)
+        new TabDataModel('StackOverflow 10', 'https://stackoverflow.com', 11)
       );
       archivedBuckets.addTab(
-        new TabDataModel(12, 'StackOverflow', 'https://stackoverflow.com', 12)
+        new TabDataModel('StackOverflow 11', 'https://stackoverflow.com', 12)
       );
       
 
@@ -219,7 +219,7 @@ export class BucketDataModel {
   }
 
   addTab(tab: TabDataModel): void {
-    tab.setTabID(this.BucketTabs.length + 1);
+    // tab.setTabID(this.BucketTabs.length + 1);
     tab.setOrder(this.BucketTabs.length + 1);    
     this.BucketTabs.push(tab);
   }
@@ -281,18 +281,18 @@ export class BucketDataModel {
 }
 
 export class TabDataModel {
-  private TabID: Number = -1;
+  private TabID: String = '';
   private TabName: String = '';
   private TabURL: String = '';
   private Order: Number = -1;
 
   constructor(
-    id: Number,
     name: String,
     url: String,
-    order: Number
+    order: Number,
+    id?: String,
   ) {
-    this.TabID = id;
+    this.TabID = id ?? ulid();
     this.TabName = name;
     this.TabURL = url;
     this.Order = order;
@@ -307,7 +307,7 @@ export class TabDataModel {
   }
 
   getTabID(): String {
-    return this.TabID.toString();
+    return this.TabID;
   }
 
   getTabName(): String {
@@ -326,7 +326,7 @@ export class TabDataModel {
     this.TabURL = url;
   }
 
-  setTabID(id: Number): void {
+  setTabID(id: String): void {
     this.TabID = id;
   }
 }

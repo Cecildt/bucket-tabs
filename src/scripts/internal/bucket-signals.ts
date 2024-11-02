@@ -22,7 +22,7 @@ export interface RenameBucketType {
 }
 
 interface TabSearchItem {
-  TabID: Number;
+  TabID: String;
   TabName: String;
   TabURL: String;
   BucketID: String;

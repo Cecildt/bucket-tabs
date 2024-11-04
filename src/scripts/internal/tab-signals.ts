@@ -53,7 +53,7 @@ export class TabSignals {
         break;
       case TabEvents.OpenWindowTab:
         this._openWindowTabSignal(value);
-        break;      
+        break;
 
       default:
         console.error('No tab signal match!');
@@ -95,7 +95,7 @@ export class TabSignals {
     this._openWindowTabSignal((currentTabInfo) => {
       console.log('Signal: Open New Window Tab');
       this.openWindowTab(currentTabInfo);
-    });    
+    });
   }
 
   // Signals functions
@@ -262,6 +262,14 @@ export class TabSignals {
       currentTabInfo.BucketID
     );
 
+    if (!bucket) {
+      bucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+      if (bucket.getBucketID() !== currentTabInfo.BucketID) {
+        bucket = undefined;
+      }
+    }
+
     if (bucket) {
       let currentTab = bucket
         .getTabs()
@@ -269,11 +277,19 @@ export class TabSignals {
 
       if (currentTab) {
         bucket.removeTab(currentTab);
-        window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+        
         // View
-        window.globalBucketTabsState.BucketSignals.emit(
-          BucketEvents.LoadBuckets
-        );
+        if (bucket.getBucketType() === BucketType.Archived) {
+          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(bucket);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LoadArchive
+          );
+        } else {
+          window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
+          window.globalBucketTabsState.BucketSignals.emit(
+            BucketEvents.LoadBuckets
+          );
+        }
       }
     }
   }
@@ -294,7 +310,7 @@ export class TabSignals {
     // Data
     let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
       currentTabInfo.BucketID
-    );    
+    );
 
     if (bucket) {
       let currentTab = bucket
@@ -307,8 +323,10 @@ export class TabSignals {
 
         if (archiveBucket) {
           archiveBucket.addTab(currentTab);
-          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(archiveBucket);
-          
+          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+            archiveBucket
+          );
+
           bucket.removeTab(currentTab);
           window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
 
@@ -352,6 +370,5 @@ export class TabSignals {
         window.open(currentTab.getTabURL().toString(), '_blank');
       }
     }
-  }  
-
+  }
 }

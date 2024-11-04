@@ -54,10 +54,10 @@ export class StorageAdapter {
   
         bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
           let tabData = new TabDataModel(
-            tab.TabID,
             tab.TabName,
             tab.TabURL,
-            tab.Order
+            tab.Order,
+            tab.TabID,
           );
           newBucket.addTab(tabData);
         });
@@ -120,10 +120,10 @@ export class StorageAdapter {
   
         bucket.BucketTabs.forEach((tab: TabStorageDataModel) => {
           let tabData = new TabDataModel(
-            tab.TabID,
             tab.TabName,
             tab.TabURL,
-            tab.Order
+            tab.Order,
+            tab.TabID,
           );
           newBucket.addTab(tabData);
         });

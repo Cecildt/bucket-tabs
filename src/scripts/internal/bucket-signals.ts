@@ -14,11 +14,17 @@ export enum BucketEvents {
   StarBucket,
   RenameBucket,
   GlobalSearch,
+  SearchBucketTabs,
 }
 
 export interface RenameBucketType {
   BucketID: String;
   BucketName: String;
+}
+
+export interface SearchBucketItem {
+  BucketID: String;
+  SearchText: String;
 }
 
 interface TabSearchItem {
@@ -41,6 +47,7 @@ export class BucketSignals {
   private _starBucketSignal = createSignal<String>();
   private _renameBucketSignal = createSignal<RenameBucketType>();
   private _globalSearchSignal = createSignal<String>();
+  private _searchBucketTabsSignal = createSignal<SearchBucketItem>();
 
   constructor() {
     this.setupSignals();
@@ -80,6 +87,9 @@ export class BucketSignals {
         break;
       case BucketEvents.GlobalSearch:
         this._globalSearchSignal(value);
+        break;
+      case BucketEvents.SearchBucketTabs:
+        this._searchBucketTabsSignal(value);
         break;
 
       default:
@@ -142,6 +152,11 @@ export class BucketSignals {
     this._globalSearchSignal((data) => {
       console.log('Signal: Global Search');
       this.globalSearchViewData(data);
+    });
+
+    this._searchBucketTabsSignal((searchItem) => {
+      console.log('Signal: Search Bucket Tabs');
+      this.searchBucketTabs(searchItem);
     });
   }
 
@@ -350,7 +365,9 @@ export class BucketSignals {
                   tabEl.removeAttribute('id');
                   tabEl.setAttribute('id', tab.getTabID().toString());
 
-                  let link = tabEl.querySelector('a.tab-link') as HTMLLinkElement;
+                  let link = tabEl.querySelector(
+                    'a.tab-link'
+                  ) as HTMLLinkElement;
 
                   if (link) {
                     link.href = tab.getTabURL().toString();
@@ -609,6 +626,81 @@ export class BucketSignals {
 
       let menuEl = searchResultEl.querySelector('.menu')!;
       menuEl.replaceChildren(searchResultFragment);
+    }
+  }
+
+  private searchBucketTabs(searchItem: SearchBucketItem) {
+    // Data
+    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+      searchItem.BucketID
+    );
+
+    if (!bucket) {
+      bucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+      if (bucket.getBucketID() !== searchItem.BucketID) {
+        bucket = undefined;
+      }
+    }
+
+    if (bucket) {
+      let tabs = bucket.getTabs();
+
+      let searchTabs: TabSearchItem[] = [];
+
+      tabs.forEach((tab) => {
+        searchTabs.push({
+          TabID: tab.getTabID(),
+          TabName: tab.getTabName(),
+          TabURL: tab.getTabURL(),
+          BucketID: bucket.getBucketID(),
+          BucketName: bucket.getBucketName(),
+        });
+
+        // View
+        // Hide all tabs for the bucket
+        if (searchItem.SearchText === '') {
+          tabs.forEach((tab) => {
+            let tabEl = document.getElementById(tab.getTabID().toString());
+            if (tabEl) {
+              tabEl.style.display = '';
+            }
+          });
+        } else {
+          let tabEl = document.getElementById(tab.getTabID().toString());
+          if (tabEl) {
+            tabEl.style.display = 'none';
+          }
+        }
+      });
+
+      let options = {
+        keys: ['TabName', 'TabURL'],
+        isCaseSensitive: false,
+        includeScore: true,
+        minMatchCharLength: 2,
+        ignoreLocation: true,
+        findAllMatches: true,
+        threshold: 0,
+      };
+
+      let fuse = new Fuse(searchTabs, options);
+      let result = fuse.search(searchItem.SearchText.toString());
+      console.log(result);
+
+      let matchedTabs: TabSearchItem[] = [];
+      result.forEach((bucket) => {
+        matchedTabs.push(bucket.item);
+      });
+
+      // View
+      // Hide all tabs for the bucket and display only the tabs that match the search
+      matchedTabs.forEach((matchedTab: TabSearchItem) => {
+        let tabEl = document.getElementById(matchedTab.TabID.toString());
+        if (tabEl) {
+          tabEl.style.display = '';
+        }
+      });
     }
   }
 }

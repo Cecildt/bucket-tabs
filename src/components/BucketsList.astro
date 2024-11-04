@@ -8,7 +8,7 @@
 <script>
   import { BucketEvents } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
-  import { TabEvents, type CurrentTabInfo } from '../scripts/internal/tab-signals';
+  import { TabEvents, type CurrentTabInfo, type SearchBucketItem } from '../scripts/internal/tab-signals';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
   // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
@@ -278,6 +278,32 @@
         window.globalBucketTabsState.TabSignals.emit(TabEvents.OpenWindowTab, currentTabInfo);
       }
 
+
+    });
+
+    bucket_list.addEventListener('input', async (event) => {
+      const targetElement = event.target as HTMLInputElement;
+
+      if (targetElement.classList.contains('bt-tabs-search')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketID = '';
+
+        if (bucketGroup) {
+          bucketID = bucketGroup.id;
+        }
+
+        console.log('Tabs search: ' + bucketID);
+
+        let searchItem: SearchBucketItem = {
+          BucketID: bucketID,
+          SearchText: targetElement.value
+        }
+
+        window.globalBucketTabsState.BucketSignals.emit(
+          BucketEvents.SearchBucketTabs,
+          searchItem
+        );
+      }
 
     });
   }

@@ -53,7 +53,7 @@ export class TabSignals {
         break;
       case TabEvents.OpenWindowTab:
         this._openWindowTabSignal(value);
-        break;
+        break;      
 
       default:
         console.error('No tab signal match!');
@@ -95,7 +95,7 @@ export class TabSignals {
     this._openWindowTabSignal((currentTabInfo) => {
       console.log('Signal: Open New Window Tab');
       this.openWindowTab(currentTabInfo);
-    });
+    });    
   }
 
   // Signals functions
@@ -294,7 +294,7 @@ export class TabSignals {
     // Data
     let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
       currentTabInfo.BucketID
-    );
+    );    
 
     if (bucket) {
       let currentTab = bucket
@@ -352,7 +352,6 @@ export class TabSignals {
         window.open(currentTab.getTabURL().toString(), '_blank');
       }
     }
+  }  
 
-
-  }
 }

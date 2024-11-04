@@ -13,7 +13,7 @@ interface BucketStorageDataModel {
 }
 
 interface TabStorageDataModel {
-  TabID: Number;
+  TabID: String;
   TabName: String;
   TabURL: String;
   Order: Number;

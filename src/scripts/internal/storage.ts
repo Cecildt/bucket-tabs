@@ -34,6 +34,7 @@ export class StorageAdapter {
     } else {
       chrome.runtime.onInstalled.addListener(() => {
         chrome.storage.local.set({ buckets: [] });
+        chrome.storage.local.set({ archived: [] });
       });
     }
   }

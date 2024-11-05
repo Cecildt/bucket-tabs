@@ -98,6 +98,37 @@
         }
       }
 
+      // bt-tab-item-menu-action-move
+      if (targetElement.classList.contains('bt-tab-item-menu-action-move')) {
+        const bucketGroup = targetElement.closest('.bt-bucket-group');
+        let bucketID = '';
+
+        if (bucketGroup) {
+          bucketID = bucketGroup.id;
+        }
+
+        const tabItem = targetElement.closest('.bt-tab-item');
+        let tabID = '';
+
+        if (tabItem) {
+          tabID = tabItem.id;
+        }
+
+        const currentTabInfo: CurrentTabInfo = {
+          BucketID: bucketID,
+          TabID: tabID
+        }
+
+        // bt-move-tab-bucket-dialog
+        const renameBucketDialog = document.getElementById('bt-move-tab-bucket-dialog');
+        if (renameBucketDialog) {
+          renameBucketDialog.showModal();
+          // window.globalBucketTabsState.TabSignals.emit(TabEvents.MoveTabToBucket, currentTabInfo);
+        }
+
+        
+      }
+
       // bt-action-archive-bucket
       if (targetElement.classList.contains('bt-action-archive-bucket')) {
         const bucketGroup = targetElement.closest('.bt-bucket-group');

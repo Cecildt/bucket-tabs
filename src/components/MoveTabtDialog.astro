@@ -1,0 +1,72 @@
+---
+
+---
+
+<dialog id="bt-move-tab-bucket-dialog" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Move Tab to Bucket</h3>
+    <div class="py-4">
+      <!-- List buckets -->
+       <ul id="bt-move-tab-buckets-list">
+        <li class="flex justify-between items-center py-2">
+          <span>Bucket 1</span>
+          <input type="radio" name="bucket" value="bucket1" />
+        </li>
+        <li class="flex justify-between items-center py-2">
+          <span>Bucket 2</span>
+          <input type="radio" name="bucket" value="bucket2" />
+        </li>
+        <li class="flex justify-between items-center py-2">
+          <span>Bucket 3</span>
+          <input type="radio" name="bucket" value="bucket3" />
+        </li>
+       </ul>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button id="bt-move-tab-bucket-btn" class="mr-4">Move</button>
+        <button>Cancel</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import {
+    BucketEvents,
+    type RenameBucketType,
+  } from '../scripts/internal/bucket-signals';
+import { TabEvents, type MoveTabToBucketType } from '../scripts/internal/tab-signals';
+
+  const renameBucketBtn = document.getElementById('bt-move-tab-bucket-btn');
+  if (renameBucketBtn) {
+    renameBucketBtn.addEventListener('click', () => {
+      console.log('Move Tab to bucket button');
+
+      const bucketsListEl = document.getElementById('bt-move-tab-buckets-list');
+      const selectedBucket: HTMLElement | null | undefined = bucketsListEl?.querySelector('input:checked');
+
+      if (selectedBucket) {
+        const bucketID = selectedBucket.nodeValue;
+
+        if (!bucketID) {
+          return;
+        }
+
+        const bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(bucketID);
+
+        let tabMove: MoveTabToBucketType = {
+          TabID: '',
+          CurrentBucketID: '',
+          NewBucketID: '',
+        };
+
+        window.globalBucketTabsState.TabSignals.emit(
+          TabEvents.MoveTabToBucket,
+          tabMove
+        );
+      }
+
+    });
+  }
+</script>

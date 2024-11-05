@@ -37,7 +37,6 @@ export class TabSignals {
   private _moveTabToBucketSignal = createSignal<MoveTabToBucketType>();
   private _moveTabDialogSignal = createSignal<CurrentTabInfo>();
 
-
   constructor() {
     this.setupSignals();
   }
@@ -304,10 +303,12 @@ export class TabSignals {
 
       if (currentTab) {
         bucket.removeTab(currentTab);
-        
+
         // View
         if (bucket.getBucketType() === BucketType.Archived) {
-          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(bucket);
+          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+            bucket
+          );
           window.globalBucketTabsState.BucketSignals.emit(
             BucketEvents.LoadArchive
           );
@@ -412,38 +413,71 @@ export class TabSignals {
       return;
     }
 
+    console.log(currentTabInfo);
+
     // Data
-    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
-      currentTabInfo.CurrentBucketID
-    );
+    let currentBucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+        currentTabInfo.CurrentBucketID
+      );
 
-    if (bucket) {
-      let currentTab = bucket
-        .getTabs()
-        .find((tab) => tab.getTabID() === currentTabInfo.TabID);
-
-      if (currentTab) {
-        let archiveBucket =
-          window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
-
-        if (archiveBucket) {
-          archiveBucket.removeTab(currentTab);
-          window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
-            archiveBucket
-          );
-
-          bucket.addTab(currentTab);
-          window.globalBucketTabsState.BucketListDataModel.saveBucket(bucket);
-
-          // View
-          window.globalBucketTabsState.BucketSignals.emit(
-            BucketEvents.LoadBuckets
-          );
-          window.globalBucketTabsState.BucketSignals.emit(
-            BucketEvents.LoadArchive
-          );
-        }
+    if (!currentBucket) {
+      currentBucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+      if (currentBucket.getBucketID() !== currentTabInfo.CurrentBucketID) {
+        currentBucket = undefined;
       }
+    }
+
+    let newBucket =
+      window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+        currentTabInfo.NewBucketID
+      );
+    if (!newBucket) {
+      newBucket =
+        window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
+      if (newBucket.getBucketID() !== currentTabInfo.CurrentBucketID) {
+        newBucket = undefined;
+      }
+    }
+
+    if (!currentBucket) {
+      return;
+    }
+
+    if (!newBucket) {
+      return;
+    }
+
+    let currentTab = currentBucket
+      .getTabs()
+      .find((tab) => tab.getTabID() === currentTabInfo.TabID);
+
+    if (currentTab) {
+      newBucket.addTab(currentTab);
+      if (currentBucket.getBucketType() === BucketType.Archived) {
+        window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+          newBucket
+        );
+      } else {
+        window.globalBucketTabsState.BucketListDataModel.saveBucket(newBucket);
+      }
+
+      currentBucket.removeTab(currentTab);
+
+      if (currentBucket.getBucketType() === BucketType.Archived) {
+        window.globalBucketTabsState.BucketListDataModel.saveArchiveBucket(
+          currentBucket
+        );
+      } else {
+        window.globalBucketTabsState.BucketListDataModel.saveBucket(
+          currentBucket
+        );
+      }
+      
+      // View
+      window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadBuckets);
+      window.globalBucketTabsState.BucketSignals.emit(BucketEvents.LoadArchive);
     }
   }
 
@@ -466,7 +500,8 @@ export class TabSignals {
     );
 
     let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
-    let archiveBuckets = window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+    let archiveBuckets =
+      window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
 
     if (bucket) {
       buckets = buckets.filter((b) => b.getBucketID() !== bucket.getBucketID());
@@ -476,18 +511,18 @@ export class TabSignals {
       );
     }
 
-    if (archiveBuckets.length > 0){
+    if (archiveBuckets.length > 0) {
       buckets.push(archiveBuckets[0]);
     }
-    
+
     // View
     let listFragment = document.createDocumentFragment();
 
     buckets.forEach((bucket) => {
       let item = document.createElement('li');
-      item.classList.add('flex', 'justify-between', 'items-center', 'py-2');
-      item.innerHTML = `<span>${bucket.getBucketName()}</span>
-                        <input type="radio" name="bucket" value="${bucket.getBucketID()}" />`;
+      item.classList.add('flex', 'items-center', 'py-2');
+      item.innerHTML = `<input type="radio" name="bucket" class="radio radio-success mr-5" value="${bucket.getBucketID()}" />
+                        <span>${bucket.getBucketName()}</span>`;
       listFragment.appendChild(item);
     });
 
@@ -497,11 +532,18 @@ export class TabSignals {
       bucketList.appendChild(listFragment);
     }
 
-    const renameBucketDialog = document.getElementById('bt-move-tab-bucket-dialog');
+    let moveTabButton = document.getElementById('bt-move-tab-bucket-btn');
+    moveTabButton?.setAttribute('data-tab-id', currentTabInfo.TabID.toString());
+    moveTabButton?.setAttribute(
+      'data-current-bucket-id',
+      currentTabInfo.BucketID.toString()
+    );
+
+    const renameBucketDialog = document.getElementById(
+      'bt-move-tab-bucket-dialog'
+    );
     if (renameBucketDialog) {
       renameBucketDialog.showModal();
-      
     }
   }
-
 }

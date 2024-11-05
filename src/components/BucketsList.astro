@@ -6,9 +6,10 @@
 <ul id="buckets-list-archive" class="z-0"></ul>
 
 <script>
-  import { BucketEvents } from '../scripts/internal/bucket-signals';
+  import { BucketEvents, SearchBucketItem } from '../scripts/internal/bucket-signals';
   import { GlobalBucketTabsState } from '../scripts/internal/global-state';
-  import { TabEvents, type CurrentTabInfo, type SearchBucketItem } from '../scripts/internal/tab-signals';
+  import { TabEvents, type CurrentTabInfo } from '../scripts/internal/tab-signals';
+import { traceWarning } from '../scripts/internal/trace';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
   // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
@@ -17,7 +18,7 @@
   if (
     window.globalBucketTabsState.BucketListDataModel.getBuckets().length === 0
   ) {
-    console.log('No buckets found!');
+    traceWarning('No buckets found!');
   }
 
   const bucket_list = document.getElementById('buckets-list');
@@ -89,6 +90,7 @@
           bucketName = 'Bucket';
         }
 
+        // TODO: Move logic to signal handler
         const renameBucketDialog = document.getElementById('bt-rename-bucket');
         const renameInput = renameBucketDialog?.querySelector('input');
         if (renameInput) {
@@ -315,8 +317,6 @@
         if (bucketGroup) {
           bucketID = bucketGroup.id;
         }
-
-        console.log('Tabs search: ' + bucketID);
 
         let searchItem: SearchBucketItem = {
           BucketID: bucketID,

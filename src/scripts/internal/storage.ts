@@ -1,6 +1,7 @@
 // Description: Logic for storing and retrieving data from local storage
 
 import { BucketDataModel, BucketType, TabDataModel } from './bucket-data-model';
+import { traceInfo } from './trace';
 
 interface BucketStorageDataModel {
   BucketID: String;
@@ -26,7 +27,7 @@ export class StorageAdapter {
   }
 
   initStorage(): void {
-    console.log('Storage initialized');
+    traceInfo('Storage initialized');
   
     if (this._useBrowserStorage) {
       localStorage.setItem('buckets', JSON.stringify([]));

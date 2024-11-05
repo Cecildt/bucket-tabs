@@ -1,23 +1,25 @@
+import { traceInfo, traceWarning } from "./trace";
+
 export function sleepTab(tab?: chrome.tabs.Tab): void {
-  console.log('Sleeping tab');
+  traceInfo('Sleeping tab');
   if (tab === undefined) {
-    console.log('No tab to sleep');
+    traceWarning('No tab to sleep');
     return;
   }
 
-  console.log('Sleeping tab: $1 - $2', tab.title, tab.url);
+  traceInfo('Sleeping tab: $1 - $2', tab.title, tab.url);
   let sleepURL =
     'sleep/index.html?bt-title=' + tab.title + '&bt-url=' + tab.url;
   let id = tab.id;
   let title = 'Sleeping - ' + tab.title;
 
   if (id === undefined) {
-    console.log('No tab ID');
+    traceWarning('No tab ID');
     return;
   }
 
   if (title === undefined) {
-    console.log('No tab title');
+    traceWarning('No tab title');
     title = 'Sleeping Tab';
   }
 
@@ -25,20 +27,20 @@ export function sleepTab(tab?: chrome.tabs.Tab): void {
 }
 
 export function suspendTab(tab?: chrome.tabs.Tab): void {
-  console.log('Suspending tab');
+  traceInfo('Suspending tab');
   if (tab === undefined) {
-    console.log('No tab to suspend');
+    traceWarning('No tab to suspend');
 
     getCurrentTab().then((currentTab) => {
       if (currentTab === undefined) {
-        console.log('No current tab');
+        traceWarning('No current tab');
         return;
       }
 
       let id = currentTab.id;
 
       if (id === undefined) {
-        console.log('No tab ID');
+        traceWarning('No tab ID');
         return;
       }
 
@@ -51,7 +53,7 @@ export function suspendTab(tab?: chrome.tabs.Tab): void {
   let id = tab.id;
 
   if (id === undefined) {
-    console.log('No tab ID');
+    traceWarning('No tab ID');
     return;
   }
 
@@ -60,14 +62,14 @@ export function suspendTab(tab?: chrome.tabs.Tab): void {
 }
 
 export function suspendAllTabs(): void {
-  console.log('Suspending all tabs');
+  traceInfo('Suspending all tabs');
 
   chrome.tabs.query({ currentWindow: true}, (tabs) => {
     for (let tab of tabs) {
       let id = tab.id;
 
       if (id === undefined) {
-        console.log('No tab ID');
+        traceWarning('No tab ID');
         return;
       }
 
@@ -77,11 +79,11 @@ export function suspendAllTabs(): void {
 }
 
 export function displayBuckets(): void {
-    console.log('Displaying Buckets');
+    traceInfo('Displaying Buckets');
 
     chrome.tabs.query({  title: 'Bucket Tabs Management' }, (tabs) => {
       if (tabs.length === 0) {
-        console.log('No Buckets tab found.');
+        traceWarning('No Buckets tab found.');
         chrome.tabs.create({url: 'buckets/index.html', pinned: true });
         return;
       }
@@ -90,7 +92,7 @@ export function displayBuckets(): void {
       let id = tab.id;
 
       if (id === undefined) {
-        console.log('No tab ID');
+        traceWarning('No tab ID');
         return;
       }
 
@@ -105,7 +107,7 @@ export async function getCurrentTab() {
   let [tab] = await chrome.tabs.query(queryOptions);
 
   if (tab === undefined) {
-    console.log('No current tab found.');
+    traceWarning('No current tab found.');
   }
 
   return tab;

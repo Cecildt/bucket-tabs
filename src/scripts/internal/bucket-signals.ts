@@ -1,6 +1,7 @@
 import { BucketDataModel, BucketType } from './bucket-data-model';
 import { createSignal } from './signals';
 import Fuse from 'fuse.js';
+import { traceInfo } from './trace';
 
 export enum BucketEvents {
   LoadBuckets,
@@ -100,62 +101,62 @@ export class BucketSignals {
 
   private setupSignals() {
     this._loadBucketsSignal(() => {
-      console.log('Signal: Load Buckets');
+      traceInfo('Signal: Load Buckets');
       this.loadBucketsViewData();
     });
 
     this._loadArchiveSignal(() => {
-      console.log('Signal: Load Archive');
+      traceInfo('Signal: Load Archive');
       this.loadArchiveViewData();
     });
 
     this._addBucketSignal(() => {
-      console.log('Signal: Add Bucket');
+      traceInfo('Signal: Add Bucket');
       this.addBucketViewData();
     });
 
     this._deleteBucketSignal((bucketID) => {
-      console.log('Signal: Delete Bucket');
+      traceInfo('Signal: Delete Bucket');
       this.deleteBucketViewData(bucketID);
     });
 
     this._deleteAllBucketsSignal(() => {
-      console.log('Signal: Delete All Buckets');
+      traceInfo('Signal: Delete All Buckets');
       this.deleteAllBucketsViewData();
     });
 
     this._exportBucketsSignal(() => {
-      console.log('Signal: Export Buckets');
+      traceInfo('Signal: Export Buckets');
       this.exportBucketsData();
     });
 
     this._archiveBucketSignal((bucketID) => {
-      console.log('Signal: Archive Bucket');
+      traceInfo('Signal: Archive Bucket');
       this.archiveBucketViewData(bucketID);
     });
 
     this._lockBucketSignal((bucketID) => {
-      console.log('Signal: Lock Bucket');
+      traceInfo('Signal: Lock Bucket');
       this.lockBucketViewData(bucketID);
     });
 
     this._starBucketSignal((bucketID) => {
-      console.log('Signal: Star Bucket');
+      traceInfo('Signal: Star Bucket');
       this.starBucketViewData(bucketID);
     });
 
     this._renameBucketSignal((data) => {
-      console.log('Signal: Rename Bucket');
+      traceInfo('Signal: Rename Bucket');
       this.renameBucketViewData(data.BucketID, data.BucketName);
     });
 
     this._globalSearchSignal((data) => {
-      console.log('Signal: Global Search');
+      traceInfo('Signal: Global Search');
       this.globalSearchViewData(data);
     });
 
     this._searchBucketTabsSignal((searchItem) => {
-      console.log('Signal: Search Bucket Tabs');
+      traceInfo('Signal: Search Bucket Tabs');
       this.searchBucketTabs(searchItem);
     });
   }
@@ -572,7 +573,6 @@ export class BucketSignals {
 
     let fuse = new Fuse(searchTabs, options);
     let result = fuse.search(searchText.toString());
-    console.log(result);
 
     let matchedTabs: TabSearchItem[] = [];
     result.forEach((bucket) => {
@@ -686,7 +686,6 @@ export class BucketSignals {
 
       let fuse = new Fuse(searchTabs, options);
       let result = fuse.search(searchItem.SearchText.toString());
-      console.log(result);
 
       let matchedTabs: TabSearchItem[] = [];
       result.forEach((bucket) => {

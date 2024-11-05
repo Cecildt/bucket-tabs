@@ -1,6 +1,7 @@
 import { BucketDataModel, BucketType } from './bucket-data-model';
 import { BucketEvents } from './bucket-signals';
 import { createSignal } from './signals';
+import { traceInfo } from './trace';
 
 export interface CurrentTabInfo {
   BucketID: String;
@@ -79,47 +80,47 @@ export class TabSignals {
 
   private setupSignals() {
     this._archiveTabsSignal((bucketID) => {
-      console.log('Signal: Archive Tabs');
+      traceInfo('Signal: Archive Tabs');
       this.archiveTabsViewData(bucketID);
     });
 
     this._deleteTabsSignal((bucketID) => {
-      console.log('Signal: Delete Tabs');
+      traceInfo('Signal: Delete Tabs');
       this.deleteTabsViewData(bucketID);
     });
 
     this._restoreTabsSignal((bucketID) => {
-      console.log('Signal: Restore Tabs');
+      traceInfo('Signal: Restore Tabs');
       this.restoreTabsViewData(bucketID);
     });
 
     this._restoreTabsGroupedSignal((bucketID) => {
-      console.log('Signal: Restore Tabs Grouped');
+      traceInfo('Signal: Restore Tabs Grouped');
       this.restoreTabsGroupedViewData(bucketID);
     });
 
     this._archiveTabSignal((currentTabInfo) => {
-      console.log('Signal: Archive Tab');
+      traceInfo('Signal: Archive Tab');
       this.archiveTab(currentTabInfo);
     });
 
     this._deleteTabSignal((currentTabInfo) => {
-      console.log('Signal: Delete Tab');
+      traceInfo('Signal: Delete Tab');
       this.deleteTab(currentTabInfo);
     });
 
     this._openWindowTabSignal((currentTabInfo) => {
-      console.log('Signal: Open New Window Tab');
+      traceInfo('Signal: Open New Window Tab');
       this.openWindowTab(currentTabInfo);
     });
 
     this._moveTabToBucketSignal((currentTabInfo) => {
-      console.log('Signal: Move Tab To Bucket');
+      traceInfo('Signal: Move Tab To Bucket');
       this.moveTabToBucket(currentTabInfo);
     });
 
     this._moveTabDialogSignal((currentTabInfo) => {
-      console.log('Signal: Move Tab Dialog');
+      traceInfo('Signal: Move Tab Dialog');
       this.moveTabDialog(currentTabInfo);
     });
   }
@@ -412,8 +413,6 @@ export class TabSignals {
     if (currentTabInfo.TabID === '') {
       return;
     }
-
-    console.log(currentTabInfo);
 
     // Data
     let currentBucket =

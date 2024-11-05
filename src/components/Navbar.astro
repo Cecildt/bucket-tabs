@@ -42,8 +42,6 @@ import GlobalSearchBox from "./GlobalSearchBox.astro"
 <script>
 import { BucketEvents } from "../scripts/internal/bucket-signals";
 
-  console.log('Navbar inline script loaded');
-
   const opt_menu_items = document.querySelector('.bt-opt-menu-items');
   if (opt_menu_items) {
     opt_menu_items.addEventListener('click', async (event) => {

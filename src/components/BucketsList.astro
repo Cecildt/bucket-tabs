@@ -119,14 +119,7 @@
           TabID: tabID
         }
 
-        // bt-move-tab-bucket-dialog
-        const renameBucketDialog = document.getElementById('bt-move-tab-bucket-dialog');
-        if (renameBucketDialog) {
-          renameBucketDialog.showModal();
-          // window.globalBucketTabsState.TabSignals.emit(TabEvents.MoveTabToBucket, currentTabInfo);
-        }
-
-        
+        window.globalBucketTabsState.TabSignals.emit(TabEvents.MoveTabDialog, currentTabInfo);
       }
 
       // bt-action-archive-bucket

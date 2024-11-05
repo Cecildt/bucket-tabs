@@ -23,6 +23,7 @@ export enum TabEvents {
   RestoreTabsGrouped,
   OpenWindowTab,
   MoveTabToBucket,
+  MoveTabDialog,
 }
 
 export class TabSignals {
@@ -34,6 +35,7 @@ export class TabSignals {
   private _archiveTabSignal = createSignal<CurrentTabInfo>();
   private _openWindowTabSignal = createSignal<CurrentTabInfo>();
   private _moveTabToBucketSignal = createSignal<MoveTabToBucketType>();
+  private _moveTabDialogSignal = createSignal<CurrentTabInfo>();
 
 
   constructor() {
@@ -65,6 +67,9 @@ export class TabSignals {
         break;
       case TabEvents.MoveTabToBucket:
         this._moveTabToBucketSignal(value);
+        break;
+      case TabEvents.MoveTabDialog:
+        this._moveTabDialogSignal(value);
         break;
 
       default:
@@ -112,6 +117,11 @@ export class TabSignals {
     this._moveTabToBucketSignal((currentTabInfo) => {
       console.log('Signal: Move Tab To Bucket');
       this.moveTabToBucket(currentTabInfo);
+    });
+
+    this._moveTabDialogSignal((currentTabInfo) => {
+      console.log('Signal: Move Tab Dialog');
+      this.moveTabDialog(currentTabInfo);
     });
   }
 
@@ -434,6 +444,63 @@ export class TabSignals {
           );
         }
       }
+    }
+  }
+
+  private moveTabDialog(currentTabInfo: CurrentTabInfo) {
+    if (!currentTabInfo) {
+      return;
+    }
+
+    if (currentTabInfo.BucketID === '') {
+      return;
+    }
+
+    if (currentTabInfo.TabID === '') {
+      return;
+    }
+
+    // Data
+    let bucket = window.globalBucketTabsState.BucketListDataModel.getBucketByID(
+      currentTabInfo.BucketID
+    );
+
+    let buckets = window.globalBucketTabsState.BucketListDataModel.getBuckets();
+    let archiveBuckets = window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets();
+
+    if (bucket) {
+      buckets = buckets.filter((b) => b.getBucketID() !== bucket.getBucketID());
+    } else {
+      archiveBuckets = archiveBuckets.filter(
+        (b) => b.getBucketID() !== archiveBuckets[0].getBucketID()
+      );
+    }
+
+    if (archiveBuckets.length > 0){
+      buckets.push(archiveBuckets[0]);
+    }
+    
+    // View
+    let listFragment = document.createDocumentFragment();
+
+    buckets.forEach((bucket) => {
+      let item = document.createElement('li');
+      item.classList.add('flex', 'justify-between', 'items-center', 'py-2');
+      item.innerHTML = `<span>${bucket.getBucketName()}</span>
+                        <input type="radio" name="bucket" value="${bucket.getBucketID()}" />`;
+      listFragment.appendChild(item);
+    });
+
+    let bucketList = document.getElementById('bt-move-tab-buckets-list');
+    if (bucketList) {
+      bucketList.innerHTML = '';
+      bucketList.appendChild(listFragment);
+    }
+
+    const renameBucketDialog = document.getElementById('bt-move-tab-bucket-dialog');
+    if (renameBucketDialog) {
+      renameBucketDialog.showModal();
+      
     }
   }
 

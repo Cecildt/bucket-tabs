@@ -540,7 +540,7 @@ export class TabSignals {
 
     const renameBucketDialog = document.getElementById(
       'bt-move-tab-bucket-dialog'
-    );
+    ) as HTMLDialogElement;
     if (renameBucketDialog) {
       renameBucketDialog.showModal();
     }

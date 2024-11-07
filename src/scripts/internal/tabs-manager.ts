@@ -83,7 +83,6 @@ export function displayBuckets(): void {
 
     chrome.tabs.query({  title: 'Bucket Tabs Management' }, (tabs) => {
       if (tabs.length === 0) {
-        traceWarning('No Buckets tab found.');
         chrome.tabs.create({url: 'buckets/index.html', pinned: true });
         return;
       }

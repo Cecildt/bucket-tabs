@@ -12,8 +12,8 @@
 import { traceWarning } from '../scripts/internal/trace';
 
   window.globalBucketTabsState = new GlobalBucketTabsState();
-  // await window.globalBucketTabsState.BucketListDataModel.initDataSet();
-  await window.globalBucketTabsState.BucketListDataModel.initDemoDataSet();
+  await window.globalBucketTabsState.BucketListDataModel.initDataSet();
+  // await window.globalBucketTabsState.BucketListDataModel.initDemoDataSet();
 
   if (
     window.globalBucketTabsState.BucketListDataModel.getBuckets().length === 0
@@ -91,7 +91,7 @@ import { traceWarning } from '../scripts/internal/trace';
         }
 
         // TODO: Move logic to signal handler
-        const renameBucketDialog = document.getElementById('bt-rename-bucket');
+        const renameBucketDialog = document.getElementById('bt-rename-bucket') as HTMLDialogElement;
         const renameInput = renameBucketDialog?.querySelector('input');
         if (renameInput) {
           renameInput.value = bucketName;

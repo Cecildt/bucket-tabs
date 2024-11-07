@@ -6,3 +6,5 @@ declare global {
       globalBucketTabsState: GlobalBucketTabsState
     }
   }
+
+  // declare module "daisyui";

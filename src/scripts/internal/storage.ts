@@ -1,7 +1,7 @@
 // Description: Logic for storing and retrieving data from local storage
 
 import { BucketDataModel, BucketType, TabDataModel } from './bucket-data-model';
-import { traceInfo } from './trace';
+import { traceInfo, traceWarning } from './trace';
 
 interface BucketStorageDataModel {
   BucketID: String;
@@ -21,7 +21,7 @@ interface TabStorageDataModel {
 }
 
 export class StorageAdapter {
-  private _useBrowserStorage: Boolean = true;
+  private _useBrowserStorage: Boolean = false;
   
   constructor() {
   }
@@ -43,6 +43,12 @@ export class StorageAdapter {
     let storedBuckets: Array<BucketDataModel> = [];
   
     const buckets: Array<BucketStorageDataModel> = await this.getStorage('buckets');
+
+    if (buckets === null || buckets === undefined) {
+      traceWarning('No buckets found');
+      return Promise.resolve([]);      
+    }
+
     if (buckets.length > 0) {
       buckets.forEach((bucket: BucketStorageDataModel) => {
         let newBucket = new BucketDataModel(
@@ -108,6 +114,11 @@ export class StorageAdapter {
     let storedBuckets: Array<BucketDataModel> = [];
   
     const buckets: Array<BucketStorageDataModel> = await this.getStorage('archived');
+
+    if (buckets === null || buckets === undefined) {
+      traceWarning('No buckets found');
+      return Promise.resolve([]);      
+    }
   
     if (buckets.length > 0) {
       buckets.forEach((bucket: BucketStorageDataModel) => {

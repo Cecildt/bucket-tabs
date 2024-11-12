@@ -1,4 +1,5 @@
 import { traceInfo, traceWarning } from "./trace";
+import { BucketListDataModel, TabDataModel } from './bucket-data-model';
 
 export function sleepTab(tab?: chrome.tabs.Tab): void {
   traceInfo('Sleeping tab');
@@ -110,4 +111,68 @@ export async function getCurrentTab() {
   }
 
   return tab;
+}
+
+export function sendToDefaultBucket(tab?: chrome.tabs.Tab): void {
+  traceInfo('Send to Default bucket');
+  if (tab === undefined) {
+    traceWarning('No tab to send');
+    return;
+  }
+
+  traceInfo('Sending tab: $1 - $2', tab.title, tab.url);
+  let id = tab.id;
+  let title = tab.title;
+  let url = tab.url;
+
+  if (id === undefined) {
+    traceWarning('No tab ID');
+    return;
+  }
+
+  if (title === undefined) {
+    traceWarning('No tab title');
+    title = 'Unknown Tab';
+  }
+
+  if (url === undefined) {
+    traceWarning('No tab URL');
+    return;
+  }
+
+  const bucketList: BucketListDataModel = new BucketListDataModel();
+  bucketList.initDataSet().then(() => {
+    let defaultBucket = bucketList.getDefaultBucket();
+
+    if (defaultBucket === undefined) {
+      traceWarning('No default bucket found');
+      return;
+    }
+
+    const storeTab: TabDataModel = new TabDataModel(title, url, defaultBucket.getTabs().length + 1);
+    
+    defaultBucket.addTab(storeTab);
+    bucketList.saveBucket(defaultBucket);
+
+    chrome.tabs.remove(id);
+  })
+}
+
+export function sendToBuckets(tab?: chrome.tabs.Tab): void {
+  traceInfo('Send to my Buckets');
+  if (tab === undefined) {
+    traceWarning('No tab to send');
+    return;
+  }
+
+  traceInfo('Sending tab: $1 - $2', tab.title, tab.url);
+  let id = tab.id;
+
+  if (id === undefined) {
+    traceWarning('No tab ID');
+    return;
+  }
+
+
+  chrome.tabs.remove(id);
 }

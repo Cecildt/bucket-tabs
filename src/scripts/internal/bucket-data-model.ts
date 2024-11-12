@@ -170,6 +170,10 @@ export class BucketListDataModel {
     return this._archived;
   }
 
+  getDefaultBucket(): BucketDataModel | undefined {  
+    return this._buckets.find((bucket) => bucket.getBucketType() === BucketType.Default);
+  }
+
   saveBucket(bucket: BucketDataModel): void {
     let index = this._buckets.findIndex(
       (item) => item.getBucketID() === bucket.getBucketID()

@@ -1,5 +1,6 @@
 import { ulid } from 'ulid';
 import { StorageAdapter } from './storage';
+import { traceInfo } from './trace';
 
 export enum BucketType {
   Default = 'default',
@@ -223,7 +224,19 @@ export class BucketDataModel {
   }
 
   addTab(tab: TabDataModel): void {
-    // tab.setTabID(this.BucketTabs.length + 1);
+
+    let index = this.BucketTabs.findIndex((item) => item.getTabID() === tab.getTabID());
+    if (index > -1) {
+      traceInfo('Tab already exists - ID');
+      return;
+    }
+
+    let tabIndex = this.BucketTabs.findIndex((item) => item.getTabURL() === tab.getTabURL());
+    if (tabIndex > -1) {
+      traceInfo('Tab already exists - URL');
+      return;
+    }
+
     tab.setOrder(this.BucketTabs.length + 1);    
     this.BucketTabs.push(tab);
   }

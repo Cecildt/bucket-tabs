@@ -204,6 +204,16 @@ To format with the provided configuration, run:
 
 ```bash
 npm run format
+```
+
+## Inspect Chrome extension storage
+
+Run the following command in DevTools console to inspect the extension storage:
+
+```bash
+chrome.storage.local.get(function(result) { console.log(result); });
+```
+
 
 ## Links
 

@@ -140,6 +140,14 @@ export function sendToDefaultBucket(tab?: chrome.tabs.Tab): void {
     return;
   }
 
+  const chromeURL = 'chrome://';
+  const chromeExtensionURL = 'chrome-extension://';
+
+  if (url.startsWith(chromeURL) || url.startsWith(chromeExtensionURL)) {
+    traceInfo('Ignoring Chrome URLs');
+    return;
+  }
+
   const bucketList: BucketListDataModel = new BucketListDataModel();
   bucketList.initDataSet().then(() => {
     let defaultBucket = bucketList.getDefaultBucket();
@@ -155,6 +163,7 @@ export function sendToDefaultBucket(tab?: chrome.tabs.Tab): void {
     bucketList.saveBucket(defaultBucket);
 
     chrome.tabs.remove(id);
+    refreshBucketManagementTab();
   })
 }
 
@@ -175,4 +184,25 @@ export function sendToBuckets(tab?: chrome.tabs.Tab): void {
 
 
   chrome.tabs.remove(id);
+}
+
+function refreshBucketManagementTab(): void {
+  traceInfo('Displaying Buckets');
+
+    chrome.tabs.query({  title: 'Bucket Tabs Management' }, (tabs) => {
+      if (tabs.length === 0) {
+        return;
+      }
+
+      let tab = tabs[0];
+      let id = tab.id;
+
+      if (id === undefined) {
+        traceWarning('No tab ID');
+        return;
+      }
+
+      chrome.tabs.reload(id);
+
+    });
 }

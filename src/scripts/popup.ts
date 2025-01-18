@@ -13,8 +13,15 @@ if (default_bucket_button) {
 const send_buckets_button = document.getElementById('bt-btn-send-buckets-tab');
 if (send_buckets_button) {
   send_buckets_button.addEventListener('click', async () => {
-    let currentTab = await getCurrentTab();
-    sendToBuckets(currentTab);
+    // let currentTab = await getCurrentTab();
+    // sendToBuckets(currentTab);
+    const buckets_list = document.getElementById('bt-buckets-selection');
+    if (buckets_list) {
+      const buttons_list = document.getElementById('bt-buttons-selection');
+      buttons_list?.classList.add('hidden');
+      buckets_list.classList.remove('hidden');
+    }
+
   });
 }
 
@@ -44,6 +51,20 @@ if (suspend_all_button) {
 const display_button = document.getElementById('bt-btn-display-buckets');
 if (display_button) {
     display_button.addEventListener('click', async () => {
+    displayBuckets();
+  });
+}
+
+const send_all_default_bucket_button = document.getElementById('bt-btn-send-all-default-bucket');
+if (send_all_default_bucket_button) {
+  send_all_default_bucket_button.addEventListener('click', async () => {
+    displayBuckets();
+  });
+}
+
+const send_all__bucket_button = document.getElementById('bt-btn-send-all-bucket');
+if (send_all__bucket_button) {
+  send_all__bucket_button.addEventListener('click', async () => {
     displayBuckets();
   });
 }

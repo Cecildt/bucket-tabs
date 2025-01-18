@@ -168,7 +168,6 @@ export function sendToDefaultBucket(tab?: chrome.tabs.Tab): void {
 }
 
 export function sendToBuckets(tab?: chrome.tabs.Tab): void {
-  traceInfo('Send to my Buckets');
   if (tab === undefined) {
     traceWarning('No tab to send');
     return;
@@ -176,14 +175,51 @@ export function sendToBuckets(tab?: chrome.tabs.Tab): void {
 
   traceInfo('Sending tab: $1 - $2', tab.title, tab.url);
   let id = tab.id;
+  let title = tab.title;
+  let url = tab.url;
 
   if (id === undefined) {
     traceWarning('No tab ID');
     return;
   }
 
+  if (title === undefined) {
+    traceWarning('No tab title');
+    title = 'Unknown Tab';
+  }
 
-  chrome.tabs.remove(id);
+  if (url === undefined) {
+    traceWarning('No tab URL');
+    return;
+  }
+
+  const chromeURL = 'chrome://';
+  const chromeExtensionURL = 'chrome-extension://';
+
+  if (url.startsWith(chromeURL) || url.startsWith(chromeExtensionURL)) {
+    traceInfo('Ignoring Chrome URLs');
+    return;
+  }
+
+  // TODO: Implement sending to buckets UI dialog
+
+  const bucketList: BucketListDataModel = new BucketListDataModel();
+  bucketList.initDataSet().then(() => {
+    let defaultBucket = bucketList.getDefaultBucket();
+
+    if (defaultBucket === undefined) {
+      traceWarning('No default bucket found');
+      return;
+    }
+
+    const storeTab: TabDataModel = new TabDataModel(title, url, defaultBucket.getTabs().length + 1);
+    
+    defaultBucket.addTab(storeTab);
+    bucketList.saveBucket(defaultBucket);
+
+    chrome.tabs.remove(id);
+    refreshBucketManagementTab();
+  })
 }
 
 function refreshBucketManagementTab(): void {

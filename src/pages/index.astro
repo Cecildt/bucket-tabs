@@ -14,50 +14,86 @@ import Placeholder from '../components/Placeholder.astro';
     <div class="container w-60">
       <div class="flex items-center justify-center">
         <img
-        title="bucket"
-        width="16"
-        height="16"
-        src="/assets/images/icon16.png"
-        alt="bucket"
-        class="mr-3"/>
-      <h1 class="text-slate-50 text-lg">Bucket Tabs</h1>
+          title="bucket"
+          width="16"
+          height="16"
+          src="/assets/images/icon16.png"
+          alt="bucket"
+          class="mr-3"
+        />
+        <h1 class="text-slate-50 text-lg">Bucket Tabs</h1>
       </div>
-      <button
-        id="bt-btn-default-bucket-tab"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Send to Default Bucket
-      </button>
-      <button
-        id="bt-btn-send-buckets-tab"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Send to my buckets
-      </button>
-      <button
-        id="bt-btn-sleep-tab"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Sleep current tab
-      </button>
-      <button
-        id="bt-btn-suspend-current-tab"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Suspend current tab
-      </button>
-      <button
-        id="bt-btn-suspend-all-tab"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Suspend all tabs
-      </button>
-      <button
-        id="bt-btn-display-buckets"
-        class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
-      >
-        Bucket Tabs Management
-      </button>
+      <div id="bt-buttons-selection">
+        <button
+          id="bt-btn-default-bucket-tab"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Send to Default Bucket
+        </button>
+        <button
+          id="bt-btn-send-buckets-tab"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Send to bucket
+        </button>
+        <button
+          id="bt-btn-sleep-tab"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Sleep current tab
+        </button>
+        <button
+          id="bt-btn-suspend-current-tab"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Suspend current tab
+        </button>
+        <button
+          id="bt-btn-suspend-all-tab"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Suspend all tabs
+        </button>
+        <button
+          id="bt-btn-send-all-default-bucket"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Send all tabs to Default bucket
+        </button>
+        <button
+          id="bt-btn-send-all-bucket"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Send all tabs to bucket
+        </button>
+        <button
+          id="bt-btn-display-buckets"
+          class="w-52 m-4 bg-transparent hover:bg-blue-500 text-slate-50 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded my-2"
+        >
+          Bucket Tabs Management
+        </button>
+      </div>
+      <div id="bt-buckets-selection" class="hidden">
+        <button class="btn btn-circle btn-outline btn-sm">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <h3>Select bucket</h3>
+        <ul>
+          <li>Item A</li>
+          <li>Item B</li>
+        </ul>
+      </div>
     </div>
     <script src="./popup.js" type="module"></script>
   </body>
@@ -65,5 +101,4 @@ import Placeholder from '../components/Placeholder.astro';
 
 <style is:global>
   @tailwind base;
-
 </style>

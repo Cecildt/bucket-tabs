@@ -435,7 +435,7 @@ export class TabSignals {
     if (!newBucket) {
       newBucket =
         window.globalBucketTabsState.BucketListDataModel.getArchivedBuckets()[0];
-      if (newBucket.getBucketID() !== currentTabInfo.CurrentBucketID) {
+      if (newBucket.getBucketID() === currentTabInfo.CurrentBucketID) {
         newBucket = undefined;
       }
     }

@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import BucketsList from '../components/BucketsList.astro';
 import TabItemTemplate from '../components/TabItemTemplate.astro';
@@ -43,12 +44,6 @@ import MoveTabtDialog from '../components/MoveTabtDialog.astro';
       <MoveTabtDialog />
     </div>
   </body>
-
-  <style is:global>
-    @tailwind base;
-    @tailwind components;
-    @tailwind utilities;
-  </style>
 
   <script>
     import { BucketEvents } from '../scripts/internal/bucket-signals';

@@ -1,12 +1,10 @@
 import { sleepTab, suspendTab, displayBuckets } from './tabs-manager';
 
 export function setupContextMenu(): void {
-  let contexts: chrome.contextMenus.ContextType[] = [
-    'page',
-    'action',
-    'page_action',
-    'browser_action',
-  ];
+  let contexts: [
+    `${chrome.contextMenus.ContextType}`,
+    ...`${chrome.contextMenus.ContextType}`[],
+  ] = ['page', 'action', 'page_action', 'browser_action'];
 
   chrome.contextMenus.removeAll();
 
@@ -47,13 +45,16 @@ export function setupContextMenu(): void {
 
   if (chrome.contextMenus.onClicked.hasListener(clickHandler)) {
     console.log('Has menu click handler');
-    return
+    return;
   }
 
   // chrome.contextMenus.onClicked.hasListener(clickHandler) && chrome.contextMenus.onClicked.removeListener(clickHandler);
   chrome.contextMenus.onClicked.addListener(clickHandler);
 
-  function clickHandler(info: chrome.contextMenus.OnClickData, tab?: chrome.tabs.Tab) {
+  function clickHandler(
+    info: chrome.contextMenus.OnClickData,
+    tab?: chrome.tabs.Tab
+  ) {
     console.log('Context menu item clicked: ', info.menuItemId);
 
     if (info.menuItemId === 'sleep-tab') {
@@ -68,5 +69,4 @@ export function setupContextMenu(): void {
       console.log('Unknown menu item clicked: ', info.menuItemId);
     }
   }
-
 }
